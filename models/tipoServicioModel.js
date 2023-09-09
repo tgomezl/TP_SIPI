@@ -1,0 +1,14 @@
+const mongoose =require("mongoose")
+
+const tipoServicioSchema= new mongoose.Schema({
+    nombre:{
+        type:String,
+        unique:[true,"is not unique"],
+        required:[true,"nombre servicio is required"]
+    },
+    imagen:String
+})
+
+const model = mongoose.model("TipoServicio", tipoServicioSchema)
+
+module.exports=model;
