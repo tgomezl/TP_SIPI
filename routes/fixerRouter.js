@@ -9,5 +9,9 @@ router
   .get(controller.getAll)
   .post(controller.create);
 
+router
+  .route('/:id')
+  .get(controller.getOne)
+
 
 module.exports = router;

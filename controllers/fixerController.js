@@ -32,3 +32,20 @@ exports.getAll=async(req,res,next)=>{
 
 
 }
+
+
+exports.getOne=async(req,res,next)=>{
+    try {
+        const fixer = await model.findById(req.params.id);
+        res.status(200).json({
+            status:"success",
+            data:{
+                data:fixer
+            }
+        })
+    } catch (error) {
+        next(error)
+    }
+
+
+}

@@ -36,21 +36,14 @@ exports.getAll=async(req,res,next)=>{
 exports.getOne=async(req,res,next)=>{
     try {
         const job = await model.findById(req.params.id).populate("user").populate("fixer")
-        if(!job){
-            res.status(200).json({
-                status:"documento no encontrado",
-                data:{
-                    data:null
-                }
-            })
-        }else{
-            res.status(200).json({
-                status:"success",
-                data:{
-                    data:job
-                }
-            })
-        }
+        
+        res.status(200).json({
+            status:"success",
+            data:{
+                data:job
+            }
+        })
+        
         
     } catch (error) {
         next(error)
@@ -58,8 +51,22 @@ exports.getOne=async(req,res,next)=>{
 
 
 }
-exports.update=async(req,res,next)=>{}
-exports.delete=async(req,res,next)=>{}
+exports.update=async(req,res,next)=>{
+    res.status(200).json({
+        status:"no esta implementado",
+        data:{
+            data:null
+        }
+    })
+}
+exports.delete=async(req,res,next)=>{
+    res.status(200).json({
+        status:"no esta implementado",
+        data:{
+            data:null
+        }
+    })
+}
 
 
     

@@ -38,21 +38,15 @@ exports.getAll=async(req,res,next)=>{
 exports.getOne=async(req,res,next)=>{
     try {
         const review = await model.findById(req.params.id).populate("usuario").populate("fixer").populate("trabajo")
-        if(!review){
-            res.status(200).json({
-                status:"documento no encontrado",
-                data:{
-                    data:null
-                }
-            })
-        }else{
-            res.status(200).json({
-                status:"success",
-                data:{
-                    data:review
-                }
-            })
-        }
+        
+        
+        res.status(200).json({
+            status:"success",
+            data:{
+                data:review
+            }
+        })
+        
         
     } catch (error) {
         next(error)
