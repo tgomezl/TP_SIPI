@@ -14,15 +14,19 @@ const fixerSchema= new mongoose.Schema({
         type:String, 
         unique:[true,"mail is not unique"],
         lowercase: true,
-        validate: [validator.isEmail," el email es invalido"]
+        validate: [validator.isEmail," el email es invalido"],
+        select:false
     },
     password:{
         type:String,
         required:[true, "no tiene password"],
         minlength: 8,
-        select:false   //no hace un get de este campo
+        select:false   
     },
-    telefono:String,
+    telefono:{
+        type:String,
+        select:false,
+    },
     habilitado:{
         type: Boolean, 
         default:true
@@ -38,7 +42,7 @@ const fixerSchema= new mongoose.Schema({
     horario:{
         type:String
     },
-    barrio:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Barrio' }],
+    barrios:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Barrio' }],
     tipoServicio:[{ type: mongoose.Schema.Types.ObjectId, ref: 'TipoServicio' }],
     rating:{ 
         type:Number,
@@ -46,6 +50,24 @@ const fixerSchema= new mongoose.Schema({
     },
     //misreviewsrecibidas:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
     //trabajos:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Trabajo' }]
+},{
+    toJSON:{virtuals:true},
+    toObject:{virtuals:true}
+})
+
+fixerSchema.virtual('isFixer').get(function() {
+    return true;
+});
+
+fixerSchema.virtual('isUser').get(function() {
+    return false;
+});
+
+fixerSchema.virtual("reviews",{
+    ref: "Review",
+    foreignField:"fixer",
+    localField: "_id",
+    
 })
 
 const model= mongoose.model("Fixer", fixerSchema)

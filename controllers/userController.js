@@ -1,4 +1,5 @@
 const userModel = require("../models/userModel")
+const AppError =require("../utils/AppError")
 
 exports.createUser=async(req,res,next)=>{
     try {
@@ -42,7 +43,7 @@ exports.getUser=async(req,res,next)=>{
     try {
         console.log(" GET USER");
         console.log( "el id", req.params.id );
-        const user=await userModel.findById(req.params.id);
+        const user=await userModel.findById(req.params.id).populate("reviews").populate("trabajos");
         if(user){
             res.status(200).json({
                 status:"success",
@@ -64,9 +65,27 @@ exports.getUser=async(req,res,next)=>{
 }
 
 exports.updateUser=async(req,res,next)=>{
-    res.status(200).json({
-        message:" getAllUsers not implemented yet"
-    })
+    try {
+        const user=await userModel.findByIdAndUpdate(req.params.id, req.body,
+            {
+                new: true,
+                runValidators: true
+            })
+        if(!user){
+            next(new AppError("no encontrado",401))
+        }
+        if(user){
+            res.status(200).json({
+                status:"success",
+                data:{
+                    data:user
+                }
+            })
+        }
+    } catch (error) {
+        next(error)
+    }
+    
 
 }
 
@@ -78,6 +97,19 @@ exports.deleteUser=async(req,res,next)=>{
 }
 
 exports.setRol=async(req,res,next)=>{
-    req.body.rol="user"
+    
+    console.log(req.body);
+
+    next()
+}
+
+exports.modifyBody=async(req,res,next)=>{
+    //filter
+    req.body={
+        nombre: req.body.nombre,
+        apellido: req.body.apellido,
+        telefono: req.body.telefono
+    };
+
     next()
 }

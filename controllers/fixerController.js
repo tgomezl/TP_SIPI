@@ -36,7 +36,7 @@ exports.getAll=async(req,res,next)=>{
 
 exports.getOne=async(req,res,next)=>{
     try {
-        const fixer = await model.findById(req.params.id);
+        const fixer = await model.findById(req.params.id).populate("reviews");
         res.status(200).json({
             status:"success",
             data:{

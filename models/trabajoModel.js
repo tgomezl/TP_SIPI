@@ -14,7 +14,7 @@ const trabajoSchema= new mongoose.Schema({
     },  //required
     estado:{
         type:String,
-        default:"en curso"
+        default:"inciado sin aprobacion"
     },
     fechaInicio:{
         type:Date,
@@ -22,7 +22,7 @@ const trabajoSchema= new mongoose.Schema({
     },
     fechaFinalizacion:{
         type:Date,
-        default: () => Date.now() + 7*24*60*60*1000
+        default: () => Date.now() + 7*24*60*60*100  //7 dias
     },
     reviewHecha:{
         type:Boolean,
@@ -32,6 +32,9 @@ const trabajoSchema= new mongoose.Schema({
     aceptadoPorFixer:{
         type:Boolean,
         default:false,
+    },
+    notasDelFixer:{
+        type:String
     }
 })
 

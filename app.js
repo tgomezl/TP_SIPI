@@ -6,6 +6,7 @@ const reviewRouter= require("./routes/reviewRouter")
 const fixerRouter= require("./routes/fixerRouter")
 const adminRouter= require("./routes/adminRouter")
 const trabajoRouter=require("./routes/trabajoRouter")
+const authController= require("./controllers/authController")
 
 const AppError =require("./utils/AppError")
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use((req, res, next) => {
 });
 
 // 3) ROUTES
+app.post("/api/v1/login", authController.login)
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/fixers', fixerRouter);
 app.use('/api/v1/trabajos', trabajoRouter);
@@ -35,7 +37,7 @@ app.use((err, req, res, next)=> {
     console.error(err.stack);
     console.log(" ");
     console.log(err.message);
-    res.status(500).send('Something broke!');
+    res.status(500).send('Something broke!'+err.message);
 });
 
 module.exports = app;

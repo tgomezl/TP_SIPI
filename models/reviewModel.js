@@ -35,6 +35,8 @@ const reviewSchema= mongoose.Schema({
     },
 })
 
+reviewSchema.index({ usuario:1, trabajo:1},{unique:true})
+
 const Model=mongoose.model('Review', reviewSchema )
 
 module.exports=Model;

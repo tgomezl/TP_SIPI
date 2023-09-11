@@ -42,6 +42,25 @@ const userSchema= new mongoose.Schema({
     //misreviewshechas:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
     //trabajos:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Trabajo' }]
 
+},{
+    toJSON:{virtuals:true},
+    toObject:{virtuals:true}
+})
+
+userSchema.virtual('isFixer').get(function() {
+    return false;
+});
+
+userSchema.virtual("reviews",{
+    ref:"Review",
+    localField:"_id",
+    foreignField:"usuario"
+})
+
+userSchema.virtual("trabajos",{
+    ref:"Trabajo",
+    localField:"_id",
+    foreignField:"user"
 })
 
 //hash la password

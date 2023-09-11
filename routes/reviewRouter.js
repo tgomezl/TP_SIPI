@@ -1,14 +1,19 @@
 const express = require('express');
-const controller =require("../controllers/reviewController")
-const router = express.Router();
-
+const reviewcontroller =require("../controllers/reviewController")
+const router = express.Router({mergeParams:true});
+const authController =require("../controllers/authController")
 router
   .route('/')
-  .get(controller.getAll)
-  .post(controller.create);
+  .get(reviewcontroller.getAll)
+  .post( authController.identificar,
+    reviewcontroller.allowUserCreate,  //solo el user crea review.OK
+    reviewcontroller.create);
 
 router
   .route('/:id')
-  .get(controller.getOne)
+  .get(reviewcontroller.getOne)
+  .patch( authController.identificar,
+    reviewcontroller.allowUserModify,  //SOLO EL USER MODIFICA LA REVIEW
+    reviewcontroller.update)
 
 module.exports = router;
