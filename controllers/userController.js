@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel")
 const AppError =require("../utils/AppError")
+const utiles=require("../utils/utiles")
 
 exports.createUser=async(req,res,next)=>{
     try {
@@ -78,6 +79,7 @@ exports.getUser=async(req,res,next)=>{
 }
 
 exports.updateUser=async(req,res,next)=>{
+    //este metodo lo usa el admin
     try {
         const user=await userModel.findByIdAndUpdate(req.params.id, req.body,
             {
@@ -110,7 +112,8 @@ exports.deleteUser=async(req,res,next)=>{
 }
 
 exports.setRol=async(req,res,next)=>{
-    
+    //creo que esta demas
+    //ver el craeetuser!!! y el rol alli
     console.log(req.body);
 
     next()
@@ -125,4 +128,35 @@ exports.modifyBody=async(req,res,next)=>{
     };
 
     next()
+}
+
+
+
+exports.updateMe=async(req,res,next)=>{
+    //este metodo solo lo ejecuta el propio fixer
+    //campos que puede actualizar son nombre,apellido, telefono,  
+    //agregar o quitarimagen, agregar o quitar servicio
+    //agregar o quitar barrio va en otro endpoint
+    try {
+        console.log("updateMe")
+        console.log("req.user", req.user);
+        //modificar los campos que no se pueden 
+        const newbody=utiles.filterObj(req.body, ["nombre","apellido","telefono"])
+        
+        //req.user
+        const user=req.user
+        for (let clave in newbody){
+            console.log(newbody[clave]);
+            user[clave]=newbody[clave]
+        }
+        const usermodified=await user.save()
+        res.status(200).json({
+            status:"success",
+            data:usermodified
+        })
+    
+   
+    } catch (error) {
+        next(error)
+    }
 }

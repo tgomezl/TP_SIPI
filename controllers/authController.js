@@ -62,56 +62,68 @@ exports.login = async (req, res, next) => {
   };
 
 exports.identificar = async (req, res, next) => {
-    // 1) Getting token and check of it's there
-    let token;
-    if (req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
-    }
-  
-    if (!token) {
-      return next(
-        new AppError('You are not logged in! Please log in to get access.', 401)
-      );
-    }
-  
-    // 2) Verification token
-    //const decoded = await promisify(jwt.verify)(token, process.env.SECRET);
-    const decoded = jwt.verify(token, process.env.SECRET);
-  
-    // 3) Check if user still exists
-    let currentUser = await userModel.findById(decoded.id);
+  try {
     
-    if (!currentUser) {
-      currentUser = await fixerModel.findById(decoded.id);
-      if(!currentUser){
+    
+    // 1) Getting token and check of it's there
+      let token;
+      if (req.headers.authorization &&
+        req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
+      }
+    
+      if (!token) {
         return next(
-          new AppError(
-            'The user belonging to this token does no longer exist.',401)
+          new AppError('You are not logged in! Please log in to get access.', 401)
         );
-      }    
+      }
+    
+      // 2) Verification token
+      //const decoded = await promisify(jwt.verify)(token, process.env.SECRET);
+      const decoded = jwt.verify(token, process.env.SECRET);
+    
+      // 3) Check if user still exists
+      let currentUser = await userModel.findById(decoded.id);
       
-    }
-  
-    // GRANT ACCESS
-    console.log("       * * * * * * * *     ");
-    console.log("    GRANTED  ");
-    console.log("       * * * * * * * *     ");
-    req.user = currentUser;
-    console.log("user aca", req.user);
-    console.log(" ");
-    next();
+      if (!currentUser) {
+        currentUser = await fixerModel.findById(decoded.id);
+        if(!currentUser){
+          return next(
+            new AppError(
+              'The user belonging to this token does no longer exist.',401)
+          );
+        }    
+        
+      }
+    
+      // GRANT ACCESS
+      console.log("       * * * * * * * *     ");
+      console.log("    GRANTED  ");
+      console.log("       * * * * * * * *     ");
+      req.user = currentUser;
+      console.log("user aca", req.user);
+      console.log(" ");
+      next();
+  } catch (error) {
+    next(new AppError("error el identificar token", 401))
+  } 
 };
 
 exports.onlyRoles=(roles)=>{
     return (req, res, next) => {
+      console.log("dentro de ",req.originalUrl," !!!");
+      console.log("esto es el id",req.params.id);
+      console.log("tu rol es",req.user.rol,"y se compara con", roles);
+      console.log("tu rol es",typeof req.user.rol);
+      console.log(roles.includes(req.user.rol));
       if (!roles.includes(req.user.rol)) {
-        return next(
-          new AppError('tu rol no te permite hacer esto', 403)
-        );
+        console.log("not allowed");
+            return next(
+              new AppError('tu rol no te permite hacer esto', 403)
+            );
       }
   
-      next();
+      return next();
     };
 };
 
@@ -131,12 +143,12 @@ exports.createAdmin=async(req,res,next)=>{
 
 exports.setMe=async(req,res,next)=>{
   try {
-
+      console.log(" seting me");
       req.me=req.user.id
       next()
   } catch (error) {
       console.log("catching");
-      next(error)
+      return next(error)
   }
 }
 

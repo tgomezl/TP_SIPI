@@ -1,5 +1,7 @@
 const mongoose=require("mongoose")
 const validator=require("validator")
+const AppError=require("../utils/AppError")
+const barrioModel =require("../models/barrioModel")
 
 const fixerSchema= new mongoose.Schema({
     nombre: {
@@ -46,7 +48,10 @@ const fixerSchema= new mongoose.Schema({
     horario:{
         type:String
     },
-    barrios:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Barrio' }],
+    barrios:[{ 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Barrio' 
+    }],
     tipoServicio:[{ type: mongoose.Schema.Types.ObjectId, ref: 'TipoServicio' }],
     rating:{ 
         type:Number,
@@ -73,6 +78,25 @@ fixerSchema.virtual("reviews",{
     localField: "_id",
     
 })
+
+fixerSchema.pre('save',  function(next) {
+    // do stuff
+    console.log("              *********************    ");
+    console.log("this",this);
+    if(this.barrios.length==0){
+        console.log("no se guardara")
+        next(new AppError("por favor especifique un barrio",401))
+    }
+    this.barrios.forEach(async element => {
+        const barrio=await barrioModel.findById(element)
+        if(!barrio){
+            next(new AppError("barrio no valido",401))
+        }
+    });
+    
+    console.log("              *********************    ");
+    next();
+  });
 
 const model= mongoose.model("Fixer", fixerSchema)
 

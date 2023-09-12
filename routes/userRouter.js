@@ -7,25 +7,44 @@ const sharedController=require("../controllers/sharedController")
 
 router
   .route('/miperfil')
-  .get(authController.setMe,userController.getUser)
+  .get(authController.identificar,
+    authController.setMe,
+    userController.getUser)
+
+router
+    .route('/updateme')
+    .patch(authController.identificar,
+      authController.onlyRoles(["user"]),
+      userController.updateMe)
 
 
 router
   .route('/')
-  .get(userController.getAllUsers)
+  .get(authController.identificar,userController.getAllUsers)
   //.post(userController.setRol, userController.createUser); //esto hay que moveerlo
 
 router
   .route('/:id')
-  .get(userController.getUser)
-  .patch(userController.modifyBody, userController.updateUser)
-  .delete(authController.onlyRoles(["admin"]) ,userController.deleteUser);
+  .get(authController.identificar,
+    userController.getUser)
+  .patch(authController.identificar,
+    authController.onlyRoles(["admin"]) ,
+    userController.modifyBody, 
+    userController.updateUser)
+  .delete(authController.identificar,
+    authController.onlyRoles(["admin"]) ,
+    userController.deleteUser);
 //---------------------------------------------------------------------
 router
-  .get('/:id/reviews', sharedController.getAllReviewsFromUser)
+  .get('/:id/reviews', 
+  authController.identificar,
+  sharedController.getAllReviewsFromUser)
 
-  //SOLO EL USER PUEDE VER TODOS SUS TRBAJOS!!!!
+  //SOLO EL USER PUEDE VER TODOS SUS TRBAJOS??
+  //por ahora no pero se puede modificar
 router
-  .get('/:id/trabajos',sharedController.getAllJobsFromUser)
+  .get('/:id/trabajos',
+  authController.identificar,
+  sharedController.getAllJobsFromUser)
 
 module.exports = router;

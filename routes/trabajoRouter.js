@@ -10,9 +10,10 @@ const reviewRouter=require("../routes/reviewRouter")
 router
   .route('/')
   .get(
-    trabajoController.getAll)
+    trabajoController.getAll)  //todos peuden ver esto
     
   .post(
+    authController.identificar,
     trabajoController.allowUserCreate,  //solo el USER CREA el TRABAJO
     trabajoController.create);
 
@@ -22,16 +23,10 @@ router
     trabajoController.allowFixerModify,  //solo el fixer modifica el TRABAJO
     trabajoController.aceptar)
 
-
-    //para el post review???
-/*
-router
-  .use('/:id/review',reviewRouter )
-*/
-
 router
   .route('/:id')
-  .get(trabajoController.getOne)
+  .get(authController.identificar,
+    trabajoController.getOne)
   .patch(
     authController.identificar,
     trabajoController.allowFixerModify,  //solo el fixer modifica el TRABAJO

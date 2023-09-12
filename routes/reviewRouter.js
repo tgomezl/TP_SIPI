@@ -14,7 +14,8 @@ router
 
 router
   .route('/:id')
-  .get(reviewcontroller.getOne)
+  .get(authController.identificar,
+    reviewcontroller.getOne)
   .patch( authController.identificar,
       reviewcontroller.allowUserModify,  //SOLO EL USER MODIFICA LA REVIEW
       reviewcontroller.update)
