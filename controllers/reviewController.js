@@ -31,7 +31,16 @@ exports.create=async(req,res,next)=>{
 
 exports.getAll=async(req,res,next)=>{
     try {
-        const reviews = await model.find()
+        console.log("body ",req.body);
+        let reviews = model.find()
+        if(req.params.id){
+            console.log(" viene con param");
+            console.log("reviews de un fixer");
+            reviews.where("fixer").equals(req.params.id);
+            //OJO XQ VA A CHOCAR CUANDO EN VEZ DE FIXER QUIERA PONER USER
+        }
+    
+        reviews=await reviews
         res.status(200).json({
             status:"success",
             cantidad: reviews.length,

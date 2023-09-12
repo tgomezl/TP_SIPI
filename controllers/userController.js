@@ -17,7 +17,16 @@ exports.createUser=async(req,res,next)=>{
     }
 }
 
+exports.setMe=async(req,res,next)=>{
+    try {
 
+        req.me=req.user.id
+        next()
+    } catch (error) {
+        console.log("catching");
+        next(error)
+    }
+}
 
 exports.getAllUsers=async(req,res,next)=>{
 
@@ -41,9 +50,13 @@ exports.getAllUsers=async(req,res,next)=>{
 exports.getUser=async(req,res,next)=>{
 
     try {
+        let id=req.params.id
+        if(req.me){
+            id=req.me
+        }
         console.log(" GET USER");
-        console.log( "el id", req.params.id );
-        const user=await userModel.findById(req.params.id).populate("reviews").populate("trabajos");
+        console.log( "el id", id );
+        const user=await userModel.findById(id).populate("reviews").populate("trabajos");
         if(user){
             res.status(200).json({
                 status:"success",

@@ -4,6 +4,7 @@ const fixerModel=require("../models/fixerModel")
 const AppError =require("../utils/AppError")
 
 
+
 const signToken = id => {
     return jwt.sign({ id }, process.env.SECRET, {
       expiresIn: "90m"
@@ -80,6 +81,7 @@ exports.identificar = async (req, res, next) => {
   
     // 3) Check if user still exists
     let currentUser = await userModel.findById(decoded.id);
+    
     if (!currentUser) {
       currentUser = await fixerModel.findById(decoded.id);
       if(!currentUser){
@@ -97,5 +99,68 @@ exports.identificar = async (req, res, next) => {
     console.log("       * * * * * * * *     ");
     req.user = currentUser;
     console.log("user aca", req.user);
+    console.log(" ");
     next();
 };
+
+exports.onlyRoles=(roles)=>{
+    return (req, res, next) => {
+      if (!roles.includes(req.user.rol)) {
+        return next(
+          new AppError('tu rol no te permite hacer esto', 403)
+        );
+      }
+  
+      next();
+    };
+};
+
+exports.createAdmin=async(req,res,next)=>{
+  try {
+    const admin=await userModel.create(req.body)
+    createSendToken(admin, 201, res);
+  } catch (error) {
+    return next(
+      new AppError('error creando el admin', 403)
+    );
+  }
+  
+
+}
+
+
+exports.setMe=async(req,res,next)=>{
+  try {
+
+      req.me=req.user.id
+      next()
+  } catch (error) {
+      console.log("catching");
+      next(error)
+  }
+}
+
+exports.createUser=async(req,res,next)=>{
+    try {
+        console.log("body ",req.body);
+        const newuser=await userModel.create(req.body)
+        createSendToken(newuser, 201, res);
+        
+    } catch (error) {
+        console.log("catching");
+        next(error)
+    }
+}
+
+exports.createFixer=async(req,res,next)=>{
+    try {
+        const fixer = await fixerModel.create(req.body)
+        createSendToken(fixer, 201, res);
+    } catch (error) {
+        next(error)
+    }
+
+
+}
+
+//**************

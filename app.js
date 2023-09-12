@@ -15,9 +15,15 @@ app.use((req, res, next) => {
   console.log('running midelware 👋');
   next();
 });
+app.post("/api/v1/login", authController.login)
+app.post("/api/v1/createadmin", authController.createAdmin)
+app.post("/api/v1/newuser", authController.createUser )
+app.post("/api/v1/newfixer", authController.createFixer )
+
+//el create new users y fixers tambien iria aca!!!
+app.use(authController.identificar)
 
 // 3) ROUTES
-app.post("/api/v1/login", authController.login)
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/fixers', fixerRouter);
 app.use('/api/v1/trabajos', trabajoRouter);

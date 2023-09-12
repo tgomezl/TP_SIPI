@@ -36,6 +36,17 @@ const trabajoSchema= new mongoose.Schema({
     notasDelFixer:{
         type:String
     }
+}
+,{
+    toJSON:{virtuals:true},
+    toObject:{virtuals:true}
+})
+
+
+trabajoSchema.virtual("review",{
+    ref:"Review",
+    localField:"_id",
+    foreignField:"trabajo"
 })
 
 const model=mongoose.model("Trabajo", trabajoSchema)

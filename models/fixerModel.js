@@ -39,6 +39,10 @@ const fixerSchema= new mongoose.Schema({
         type:Date,
         default:Date.now(),
     },
+    rol:{
+        type:String,
+        default:"fixer"
+    },
     horario:{
         type:String
     },

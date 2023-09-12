@@ -22,6 +22,7 @@ exports.create=async(req,res,next)=>{
                 data:newjob
             }
         })
+        //ACA SE PODRIA ENVIAR NOTIFICACION AL FIXER
     } catch (error) {
         console.log("catching");
         next(error)
@@ -31,7 +32,15 @@ exports.create=async(req,res,next)=>{
 exports.getAll=async(req,res,next)=>{
     try {
         console.log("body ",req.body);
-        const jobs=await model.find();
+        let jobs= model.find();
+        if(req.params.id){
+            console.log(" viene con param");
+            console.log("trabajos de un fixer");
+            jobs.where("fixer").equals(req.params.id);
+            //OJO XQ VA A CHOCAR CUANDO EN VEZ DE FIXER QUIERA PONER USER
+        }
+        
+        jobs= await jobs
         res.status(200).json({
             status:"success",
             cantidad:jobs.length,
@@ -47,7 +56,7 @@ exports.getAll=async(req,res,next)=>{
 }
 exports.getOne=async(req,res,next)=>{
     try {
-        const job = await model.findById(req.params.id).populate("user").populate("fixer")
+        const job = await model.findById(req.params.id).populate("user").populate("fixer").populate("review")
         
         res.status(200).json({
             status:"success",

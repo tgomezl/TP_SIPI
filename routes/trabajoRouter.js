@@ -3,27 +3,31 @@ const trabajoController = require('../controllers/trabajoController');
 const authController = require("../controllers/authController")
 const router = express.Router({mergeParams:true});
 const reviewRouter=require("../routes/reviewRouter")
+
+
+
+//quien tendria acceso a todos los trabajos??
 router
   .route('/')
-  .get(trabajoController.getAll)
-  .post(authController.identificar,
+  .get(
+    trabajoController.getAll)
+    
+  .post(
     trabajoController.allowUserCreate,  //solo el USER CREA el TRABAJO
     trabajoController.create);
 
-  const probandoEndpoint=(req,res,next)=>{
-    res.status(200).json({saludo:"probandoEndpoint"})
-  }
-
 router
   .route('/:id/aceptar')
-  .get(probandoEndpoint)
   .patch( authController.identificar,
     trabajoController.allowFixerModify,  //solo el fixer modifica el TRABAJO
     trabajoController.aceptar)
 
+
+    //para el post review???
+/*
 router
   .use('/:id/review',reviewRouter )
-  
+*/
 
 router
   .route('/:id')
