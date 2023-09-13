@@ -10,7 +10,7 @@ const reviewRouter=require("../routes/reviewRouter")
 router
   .route('/')
   .get(
-    trabajoController.getAll)  //todos peuden ver esto
+    trabajoController.getAll)  //todos pueden ver esto
     
   .post(
     authController.identificar,

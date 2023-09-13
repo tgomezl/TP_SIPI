@@ -8,6 +8,16 @@ const barrioSchema= new mongoose.Schema({
         lowercase: true
     },
 
+},{
+    toJSON:{virtuals:true},
+    toObject:{virtuals:true}
+})
+
+barrioSchema.virtual("fixers",{
+    ref: "Fixer",
+    foreignField:"barrios",
+    localField: "_id",
+    
 })
 
 const model=mongoose.model("Barrio", barrioSchema)

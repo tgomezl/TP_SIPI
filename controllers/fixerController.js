@@ -1,5 +1,6 @@
 const model =require("../models/fixerModel")
 const utiles=require("../utils/utiles")
+const barriomodel=require("../models/barrioModel")
 
 exports.create=async(req,res,next)=>{
     try {
@@ -19,7 +20,9 @@ exports.create=async(req,res,next)=>{
 
 exports.getAll=async(req,res,next)=>{
     try {
-        const fixers = await model.find();
+        
+
+        const fixers=await model.find().sort("rating")
         res.status(200).json({
             status:"success",
             cantidad: fixers.length,
@@ -55,10 +58,17 @@ exports.getOne=async(req,res,next)=>{
 
 }
 
-exports.setTopFixersZona=async(req,res,next)=>{
-
+exports.FixersPorZona=async(req,res,next)=>{
     try {
-        req.filtro={} //aca va el filtro!!!
+    const zona=req.body.zona.toUpperCase()
+    const barrios = await  barriomodel.find()
+    .where("nombre").equals(zona)
+    .populate("fixers")
+    .sort("fixers.rating")
+    
+    res.status(200).json({
+        data:barrios
+    })
     } catch (error) {
         next(error)
     }
@@ -101,3 +111,12 @@ exports.updateMe=async(req,res,next)=>{
     }
 }
 
+
+exports.bestfixers=async(req,res,next)=>{
+    try {
+        req.best=true
+        next()
+    } catch (error) {
+        next(error)
+    }
+}

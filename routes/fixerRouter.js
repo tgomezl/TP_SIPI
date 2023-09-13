@@ -11,9 +11,12 @@ router
   .get(authController.setMe,controller.getOne)
 */
 router
-  .route('/topfixerszona')
-  .get(controller.setTopFixersZona,controller.getAll)
+  .route('/fixersporzona')
+  .get(controller.FixersPorZona)
 
+router
+  .route('/bestfixers')
+  .get(controller.bestfixers, controller.getAll)
 
 router
   .route('/')
