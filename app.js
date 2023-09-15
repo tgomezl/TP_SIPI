@@ -1,6 +1,7 @@
 const express=require("express")
 const app = express();
-
+const cors=require("cors")
+app.use(cors())
 const userRouter =require("./routes/userRouter")
 const reviewRouter= require("./routes/reviewRouter")
 const fixerRouter= require("./routes/fixerRouter")
