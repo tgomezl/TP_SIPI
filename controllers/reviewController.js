@@ -4,7 +4,7 @@ const trbajoModel=require("../models/trabajoModel")
 
 
 exports.create=async(req,res,next)=>{
-
+    //creamos la review
     try {
        
         const data={
@@ -16,6 +16,7 @@ exports.create=async(req,res,next)=>{
             
         }
         const review = await model.create(data)
+       
         res.status(200).json({
             status:"success",
             data:{
@@ -121,15 +122,19 @@ exports.allowUserCreate=async(req,res,next)=>{
     try {
         const trabajo= await trbajoModel.findById(req.body.trabajo)
         
+        if(!trabajo) return next(new AppError("no such work created",401))
         //console.log("suer", user);
         //console.log(trabajo.user,req.user._id);
        
         if(trabajo.user!=req.user.id){
-            return next(new AppError("no tiene permiso de creacion",401))
-        }else{
-            if(trabajo.estado!=="finalizado"){
-                next(new AppError("el trabajo todavia esta en curso",401))
-            }
+            return next(new AppError(" no tiene permiso de creacion sobre este trabajo",401))
+        }
+        if(trabajo.aceptadoPorFixer==false){
+            return next(new AppError(" este trabajo no fue aceptado por el fixer",401))
+        }
+        
+        else{
+            
             req.fixerid=trabajo.fixer
             next()
 

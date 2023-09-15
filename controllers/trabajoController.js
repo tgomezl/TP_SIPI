@@ -132,7 +132,7 @@ exports.aceptar=async(req,res,next)=>{
                 job.estado="rechazado"
             }else{
                 job.aceptadoPorFixer=true
-                job.estado="iniciado"
+                job.estado="aceptado"
                 job.fechaInicio=Date.now()
             }
             job.visto=true
@@ -168,6 +168,7 @@ exports.allowFixerModify=async(req,res,next)=>{
     if(!job.fixer==user._id){
         next(new AppError("not allowed", 404))
     }
+    console.log(" le pertenece!!!");
     req.job=job;
     next()
 }

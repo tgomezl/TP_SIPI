@@ -4,6 +4,7 @@ const AppError=require("../utils/AppError")
 const barrioModel =require("../models/barrioModel")
 const tipoServicioModel=require("../models/tipoServicioModel")
 const bcrypt = require('bcryptjs');
+const utils=require("../utils/utiles")
 
 const fixerSchema= new mongoose.Schema({
     nombre: {
@@ -60,6 +61,10 @@ const fixerSchema= new mongoose.Schema({
         type:Number,
         default:6.0,
     },
+    cantidadReviews:{
+        type:Number,
+        default:1,
+    }
     //misreviewsrecibidas:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
     //trabajos:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Trabajo' }]
 },{
@@ -86,6 +91,16 @@ fixerSchema.methods.checkPassword = async function(candidatePassword,userPasswor
     return await bcrypt.compare(candidatePassword, userPassword);
 };
 
+fixerSchema.methods.modifyRating = async function(fixer, calificacion) {
+    console.log("el this.rating actual es", this.rating);
+    const nuevorating=utils.calcRating(calificacion, this.rating, this.cantidadReviews)
+    fixer.rating=nuevorating
+    fixer.cantidadReviews=this.cantidadReviews+1;
+    console.log("CALIFICACION MODFICIDADA");
+    return fixer
+    //return
+};
+
 fixerSchema.pre('save',  function(next) {
     // do stuff
     console.log("              *********************    ");
@@ -100,14 +115,18 @@ fixerSchema.pre('save',  function(next) {
     }
     this.barrios.forEach(async element => {
         const barrio=await barrioModel.findById(element)
+        console.log("el barrio es", barrio);
         if(!barrio){
-            next(new AppError("barrio no valido",401))
+            console.log("es null");
+            return next(new AppError("barrio no valido",401))
         }
     });
     this.tipoServicio.forEach(async element => {
         const servicio=await tipoServicioModel.findById(element)
+        console.log("el servicio es", servicio);
         if(!servicio){
-            next(new AppError("tipo servicio no valido",401))
+            console.log("es null");
+            return next(new AppError("tipo servicio no valido",401))
         }
     });
     

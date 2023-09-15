@@ -11,6 +11,10 @@ router
   .get(authController.setMe,controller.getOne)
 */
 router
+  .route('/endpointparapruebas')
+  .get(controller.pruebas)
+
+router
   .route('/fixersporzona')
   .get(controller.FixersPorZona)
   

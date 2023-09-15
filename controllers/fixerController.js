@@ -47,7 +47,9 @@ exports.getOne=async(req,res,next)=>{
         if(req.me){
             id=req.me
         }
-        const fixer = await model.findById(id).populate("reviews");
+        const fixer = await model.findById(id).populate("reviews")
+        .populate("barrios")
+        .populate("tipoServicio");
         res.status(200).json({
             status:"success",
             data:{
@@ -69,7 +71,7 @@ exports.FixersPorZona=async(req,res,next)=>{
         console.log("zona",zona);
 
         const barrios =await barriomodel.find()
-        .where("nombre").equals("paternal")
+        .where("nombre").equals(zona)
         .populate("fixers")
         .sort("fixers.rating")
         
@@ -183,6 +185,18 @@ exports.bestfixers=async(req,res,next)=>{
     try {
         req.best=true
         next()
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+
+exports.pruebas=async(req,res,next)=>{
+    try {
+        const fixer= await model.findById(req.body.id)
+        await fixer.modifyRating()
+        res.send("OK")
     } catch (error) {
         next(error)
     }

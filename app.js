@@ -46,7 +46,7 @@ app.use((err, req, res, next)=> {
     console.log(" ");
     console.log(err.message);
     res.status(500).json({
-      mensaje:'Something broke!',
+      mensaje:' Something broke! ',
       errormessage:err.message,
       stacktrace: err.stack,
     });

@@ -1,6 +1,10 @@
 const mongoose =require("mongoose")
+const trabajomodel=require("../models/trabajoModel")
+const fixermodel=require("../models/fixerModel")
+const utils=require("../utils/utiles")
 
 const validator= require("validator")
+const AppError = require("../utils/AppError")
 
 const reviewSchema= mongoose.Schema({
     descripcion:{
@@ -36,7 +40,30 @@ const reviewSchema= mongoose.Schema({
 })
 
 //chequear que el trabajo exista y modificar el rating del fixer
-
+reviewSchema.pre("save", async function(next) {
+    
+    const trabajo = await trabajomodel.findById(this.trabajo)
+    if(!trabajo){
+        return next(new AppError("no such work in pre",401))
+        
+    }
+    console.log("modificando el rating del fixer");
+    const fixer = await fixermodel.findById(this.fixer)
+    console.log("fixer", fixer);
+    const ratingactual=fixer.rating
+    let cantidadReviewsactual=fixer.cantidadReviews 
+    if(!cantidadReviewsactual){
+        cantidadReviewsactual= 1
+    }
+    //fixer=fixer.modifyRating(fixer,this.calificacion)
+    
+    const newrating=utils.modifyRating(this.calificacion, ratingactual, cantidadReviewsactual)
+    fixer.rating=newrating
+    fixer.cantidadReviews=cantidadReviewsactual+1
+    await fixer.save()
+    
+    next()
+})
 
 reviewSchema.index({ usuario:1, trabajo:1},{unique:true})
 
