@@ -13,7 +13,11 @@ router
 router
   .route('/fixersporzona')
   .get(controller.FixersPorZona)
-
+  
+router
+  .route('/fixersporjobzona')
+  .get(controller.FixersPorJobZona)   //necesita recibir zona y especialidad
+  
 router
   .route('/bestfixers')
   .get(controller.bestfixers, controller.getAll)

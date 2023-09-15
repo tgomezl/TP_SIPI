@@ -13,9 +13,15 @@ exports.create=async(req,res,next)=>{
         }
         const data={
             "user":req.user,
-            "fixer":fixer._id
+            "fixer":fixer._id,
+            "titulo":req.body.titulo,
+            "descripcion":req.body.descripcion
         }
         const newjob=await model.create(data)
+        //sendemailtouser
+
+        //sendemailtofixer
+
         res.status(200).json({
             status:"success",
             data:{
@@ -97,6 +103,10 @@ exports.delete=async(req,res,next)=>{
 exports.aceptar=async(req,res,next)=>{
   
     try {
+        const aceptar=req.body.aceptar
+        if(!aceptar){
+            return next( new AppError("debe indicar si lo acepta o no",401))
+        }
         let idjob=req.params.id
         
         const job = await model.findById(idjob)
@@ -108,11 +118,25 @@ exports.aceptar=async(req,res,next)=>{
                 }
             })
         }else{
-
-            job.aceptadoPorFixer=true
-            job.estado="iniciado"
-            job.fechaInicio=Date.now()
-            job.fechaFinalizacion=Date.now() + 7*24*60*60*1000
+            if(job.visto){
+                //fue visto y rechazado
+                res.status(200).json({
+                    status:"already declined",
+                    data:{
+                        data:job
+                    }
+                })
+            }
+            if(aceptar=="no"){
+                job.aceptadoPorFixer=false
+                job.estado="rechazado"
+            }else{
+                job.aceptadoPorFixer=true
+                job.estado="iniciado"
+                job.fechaInicio=Date.now()
+            }
+            job.visto=true
+            //job.fechaFinalizacion=Date.now() + 7*24*60*60*1000
             const modified=await job.save()
             res.status(200).json({
                 status:"modificado",

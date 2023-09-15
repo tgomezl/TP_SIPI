@@ -1,6 +1,9 @@
 const model =require("../models/fixerModel")
 const utiles=require("../utils/utiles")
 const barriomodel=require("../models/barrioModel")
+const tiposerviciomodel=require("../models/tipoServicioModel")
+const AppError = require("../utils/AppError")
+
 
 exports.create=async(req,res,next)=>{
     try {
@@ -22,7 +25,7 @@ exports.getAll=async(req,res,next)=>{
     try {
         
 
-        const fixers=await model.find().sort("rating")
+        const fixers=await model.find().populate("barrios").populate("tipoServicio").sort("rating")
         res.status(200).json({
             status:"success",
             cantidad: fixers.length,
@@ -60,18 +63,82 @@ exports.getOne=async(req,res,next)=>{
 
 exports.FixersPorZona=async(req,res,next)=>{
     try {
-    const zona=req.body.zona.toUpperCase()
-    const barrios = await  barriomodel.find()
-    .where("nombre").equals(zona)
-    .populate("fixers")
-    .sort("fixers.rating")
-    
-    res.status(200).json({
-        data:barrios
-    })
+   
+        const zona=req.body.zona
+        
+        console.log("zona",zona);
+
+        const barrios =await barriomodel.find()
+        .where("nombre").equals("paternal")
+        .populate("fixers")
+        .sort("fixers.rating")
+        
+        
+        
+       
+        res.status(200).json({
+            data:barrios
+        })
     } catch (error) {
         next(error)
     }
+}
+
+
+/*
+exports.FixersPorJob=async(req,res,next)=>{
+    try {
+        const job=req.body.especialidad.toUpperCase()
+        console.log("job", job);
+        let especialidad= await tiposerviciomodel.find()
+        .where("nombre").equals(job)
+        .populate("fixers",{_id:1, nombre:1, apellido:1, rating:1})
+        .sort("fixers.rating")
+        res.status(200).json({
+            data:especialidad
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+*/
+exports.FixersPorJobZona=async(req,res,next)=>{
+    try {
+        console.log(req.body);
+        if(!req.body.zona && !req.body.especialidad) return next(new AppError("sin zona ni especialidad",401))
+        const zona=req.body.zona.toLowerCase() 
+        const especialidad=req.body.especialidad.toUpperCase() 
+        console.log({zona, especialidad});
+        const algo=await model.aggregate([
+            {$match: {} },
+            {$lookup: 
+                        {
+                            from: "tiposervicios",
+                            localField: "tipoServicio",
+                            foreignField: "_id",
+                    as: "misservicios"
+                        }
+            },
+            {$match: {"misservicios.nombre":especialidad} },
+            {$lookup: 
+                        {
+                            from: "barrios",
+                            localField: "barrios",
+                            foreignField: "_id",
+                    as: "misbarrios"
+                        }
+            },
+            {$match: {"misbarrios.nombre":zona} },
+            {$sort:{"rating":1}}
+            ])
+    
+            res.status(200).json({
+                data:algo
+            })
+    } catch (error) {
+        next(error)
+    }
+   
 }
 
 exports.updateOne=async(req,res,next)=>{

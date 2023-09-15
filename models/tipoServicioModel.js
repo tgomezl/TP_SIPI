@@ -7,6 +7,17 @@ const tipoServicioSchema= new mongoose.Schema({
         required:[true,"nombre servicio is required"]
     },
     imagen:String
+},{
+    toJSON:{virtuals:true},
+    toObject:{virtuals:true}
+})
+
+
+tipoServicioSchema.virtual("fixers",{
+    ref: "Fixer",
+    foreignField:"tipoServicio",
+    localField:"_id",
+    
 })
 
 const model = mongoose.model("TipoServicio", tipoServicioSchema)

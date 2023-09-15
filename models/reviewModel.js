@@ -35,6 +35,9 @@ const reviewSchema= mongoose.Schema({
     },
 })
 
+//chequear que el trabajo exista y modificar el rating del fixer
+
+
 reviewSchema.index({ usuario:1, trabajo:1},{unique:true})
 
 const Model=mongoose.model('Review', reviewSchema )

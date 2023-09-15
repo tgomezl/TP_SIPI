@@ -1,5 +1,6 @@
 const mongoose =require("mongoose")
 const validator=require("validator")
+const bcrypt = require('bcryptjs');
 
 const userSchema= new mongoose.Schema({
     nombre: {
@@ -22,7 +23,8 @@ const userSchema= new mongoose.Schema({
         minlength: 8,
         select:false   //no hace un get de este campo
     },
-    telefono:String,
+    telefono:{type:String,
+        select:false },
     habilitado:{
         type: Boolean, 
         default:true
@@ -34,6 +36,7 @@ const userSchema= new mongoose.Schema({
     passwordChangedAt:{
         type:Date,
         default:Date.now(),
+        select:false
     },
     rol:{
         type:String,
@@ -63,7 +66,17 @@ userSchema.virtual("trabajos",{
     foreignField:"user"
 })
 
-//hash la password
+
+userSchema.methods.checkPassword = async function(candidatePassword,userPassword) {
+    return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+userSchema.pre("save", async function(next) {
+    
+    if(!this.isModified("password")) return next();
+    this.password=await bcrypt.hash(this.password, 10)
+    next()
+})
 
 const model= mongoose.model('User',userSchema)
 

@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 const userModel=require("../models/userModel")
 const fixerModel=require("../models/fixerModel")
 const AppError =require("../utils/AppError")
-
+const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 
 
 const signToken = id => {
@@ -53,10 +54,15 @@ exports.login = async (req, res, next) => {
     
     const logueado= await model.findOne({ mail:mail }).select('+password')
     //console.log("comparo", password, logueado.password);
-    if(logueado.password !== password){
+    const soniguales= await logueado.checkPassword(password, logueado.password)
+    if(!soniguales){
+      return next(new AppError('Incorrect email or password', 401));
+    }
+    /*
+    //if(logueado.password !== password){
         return next(new AppError('Incorrect email or password', 401));
     }
-
+  */
     // 3) If everything ok, send token to client
     createSendToken(logueado, 200, res);
   };
@@ -176,3 +182,23 @@ exports.createFixer=async(req,res,next)=>{
 }
 
 //**************
+exports.logout = (req, res,next) => {
+  const faketoken="asdasdasd"
+  res.status(200).json({
+    status: 'loged out',
+    token:faketoken,
+    data: {
+        user:null
+    }
+  });
+};
+
+/*
+exports.MODIFICARLASPASS=async(req, res,next) => {
+  
+  const newpassword=await bcrypt.hash("test12345", 10)
+  await userModel.updateMany({ }, {$set:{password:newpassword}})
+  await fixerModel.updateMany({ }, {$set:{password:newpassword}})
+  res.send("ok");
+}
+*/

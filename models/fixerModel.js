@@ -2,6 +2,8 @@ const mongoose=require("mongoose")
 const validator=require("validator")
 const AppError=require("../utils/AppError")
 const barrioModel =require("../models/barrioModel")
+const tipoServicioModel=require("../models/tipoServicioModel")
+const bcrypt = require('bcryptjs');
 
 const fixerSchema= new mongoose.Schema({
     nombre: {
@@ -40,6 +42,7 @@ const fixerSchema= new mongoose.Schema({
     passwordChangedAt:{
         type:Date,
         default:Date.now(),
+        select:false
     },
     rol:{
         type:String,
@@ -79,7 +82,9 @@ fixerSchema.virtual("reviews",{
     
 })
 
-
+fixerSchema.methods.checkPassword = async function(candidatePassword,userPassword) {
+    return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 fixerSchema.pre('save',  function(next) {
     // do stuff
@@ -89,16 +94,33 @@ fixerSchema.pre('save',  function(next) {
         console.log("no se guardara")
         next(new AppError("por favor especifique un barrio",401))
     }
+    if(this.tipoServicio.length==0){
+        console.log("no se guardara")
+        next(new AppError("por favor especifique un servicio",401))
+    }
     this.barrios.forEach(async element => {
         const barrio=await barrioModel.findById(element)
         if(!barrio){
             next(new AppError("barrio no valido",401))
         }
     });
+    this.tipoServicio.forEach(async element => {
+        const servicio=await tipoServicioModel.findById(element)
+        if(!servicio){
+            next(new AppError("tipo servicio no valido",401))
+        }
+    });
     
     console.log("              *********************    ");
     next();
-  });
+});
+
+fixerSchema.pre("save", async function(next) {
+    
+    if(!this.isModified("password")) return next();
+    this.password=await bcrypt.hash(this.password, 10)
+    next()
+})
 
 const model= mongoose.model("Fixer", fixerSchema)
 

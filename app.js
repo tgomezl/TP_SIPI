@@ -16,7 +16,11 @@ app.use((req, res, next) => {
   next();
 });
 
+//app.post("/api/v1/MODIFICARLASPASS", authController.MODIFICARLASPASS)
+
+
 app.post("/api/v1/login", authController.login)
+app.post("/api/v1/logout", authController.logout)
 app.post("/api/v1/createadmin", authController.createAdmin)
 app.post("/api/v1/newuser", authController.createUser )
 app.post("/api/v1/newfixer", authController.createFixer )

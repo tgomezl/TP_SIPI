@@ -2,6 +2,14 @@ const mongoose =require("mongoose")
 //lo crea el user y el fixer lo acepta
 //la reivew se puede hacer solo sobre un trabajo finalizado
 const trabajoSchema= new mongoose.Schema({
+    titulo:{
+        type:String,
+        required:true
+    },
+    descripcion:{
+        type:String,
+        required:true
+    },
     user:{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User' ,
@@ -20,16 +28,17 @@ const trabajoSchema= new mongoose.Schema({
         type:Date,
         default: () => Date.now()
     },
-    fechaFinalizacion:{
-        type:Date,
-        default: () => Date.now() + 7*24*60*60*100  //7 dias
-    },
+    
     reviewHecha:{
         type:Boolean,
         default:false,
     },
     imagenes:[{type: mongoose.Schema.Types.ObjectId, ref: 'Image'}],
     aceptadoPorFixer:{
+        type:Boolean,
+        default:false,
+    },
+    visto:{
         type:Boolean,
         default:false,
     },
