@@ -15,7 +15,7 @@ const signToken = id => {
 
 const createSendToken = (user, statusCode=201, res) => {
     const token = signToken(user._id);
-
+    user.password=null
     res.status(statusCode).json({
         status: 'success',
         token,

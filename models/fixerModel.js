@@ -52,6 +52,10 @@ const fixerSchema= new mongoose.Schema({
     horario:{
         type:String
     },
+    descripcion:{
+        type:String,
+        default:" ingrese su descripcion"
+    },
     barrios:[{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Barrio' 

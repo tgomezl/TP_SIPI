@@ -15,7 +15,8 @@ const userSchema= new mongoose.Schema({
         type:String, 
         unique:[true,"mail is not unique"],
         lowercase: true,
-        validate: [validator.isEmail," el email es invalido"]
+        validate: [validator.isEmail," el email es invalido"],
+        select:false
     },
     password:{
         type:String,

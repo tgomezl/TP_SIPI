@@ -160,7 +160,7 @@ exports.updateMe=async(req,res,next)=>{
         console.log("updateMe")
         console.log("req.user", req.user);
         //modificar los campos que no se pueden 
-        const newbody=utiles.filterObj(req.body, ["nombre","apellido","telefono"])
+        const newbody=utiles.filterObj(req.body, ["nombre","apellido","telefono","descripcion"])
         
         //req.user
         const user=req.user

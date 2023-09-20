@@ -33,6 +33,10 @@ const trabajoSchema= new mongoose.Schema({
         type:Boolean,
         default:false,
     },
+    imagenPortada:{
+        type:String,
+        default:"proximamente.jpg"
+    },
     imagenes:[{type: mongoose.Schema.Types.ObjectId, ref: 'Image'}],
     aceptadoPorFixer:{
         type:Boolean,
