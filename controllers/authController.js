@@ -3,6 +3,7 @@ const userModel=require("../models/userModel")
 const fixerModel=require("../models/fixerModel")
 const AppError =require("../utils/AppError")
 const crypto = require('crypto');
+const fs = require("fs")
 const bcrypt = require('bcryptjs');
 
 
@@ -202,3 +203,80 @@ exports.MODIFICARLASPASS=async(req, res,next) => {
   res.send("ok");
 }
 */
+
+//**************ESTE*********************** */
+exports.getImage=(req, res,next)=>{
+
+  // Parsing the URL
+  //const request = url.parse(req.url, true);
+ 
+  // Extracting the path of file
+  const nombreimagen = req.params.nombreimagen;
+  console.log("nombre imagen recibido es:", nombreimagen);
+  // Path Refinements
+  console.log("dirname es ", __dirname)
+  //esto es dirname
+  //D:\UADE\3ER AÑO\2do CUATRI\CURSOS 2023\TP DE SIPI\TP GRUPAL SIPI\TP SIPI NODE\TP_SIPI\controllers 
+ 
+  let fileExists = fs.existsSync('/public/img/dos.jpg');
+  console.log("existe esa foto?? :", fileExists);
+
+  const directoryPath = './public/img/dos.jpg';
+
+  //chek if folder exists
+  if (fs.existsSync(directoryPath)) {
+    console.log('The directory exists');
+  } else {
+    console.log('The directory does NOT exist');
+  }
+  
+  res.send("OK")
+}
+
+
+
+//chek if folder exists!!!!
+/*
+controllers aqui
+public
+
+const directoryPath = './public/img';
+
+
+if (fs.existsSync(directoryPath)) {
+  console.log('The directory exists');
+} else {
+  console.log('The directory does NOT exist');
+}
+
+
+*/
+
+
+
+exports.displayimagestatic=(req, res) => {
+  //const ruta=`../public/img/${req.params.id}`,
+  const ruta=`./public/img/dos.jpg`;
+
+    fs.readFile(
+      ruta,function (err, image) {
+            if (err) {
+                throw err;
+            }
+            console.log(image);
+            
+            res.setHeader('Content-Type', 'image/jpg');
+            //res.setHeader('Content-Length', ''); // Image size here
+            res.setHeader('Access-Control-Allow-Origin', '*'); // If needs to be public
+            res.send(image);
+        }
+    );
+};
+
+exports.downloadimage=(req, res) => {
+  console.log("to do");
+}
+
+exports.displayimage=(req, res) => {
+  console.log("to do, es simil JAVA");
+}

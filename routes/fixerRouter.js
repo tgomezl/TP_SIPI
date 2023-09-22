@@ -36,6 +36,7 @@ router
   .route('/updateme')
   .patch(authController.identificar,
     authController.onlyRoles(["fixer"]), 
+    controller.uploadFixerPhoto,
     controller.updateMe)  //el propio fixer
 
 router

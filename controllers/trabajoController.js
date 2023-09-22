@@ -2,6 +2,38 @@ const model =require("../models/trabajoModel");
 const AppError = require("../utils/AppError");
 const fixermodel=require("../models/fixerModel")
 
+const multer=require("multer")
+const storage=multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null, "public/img/trabajos")
+    },
+    filename:(req,file,cb)=>{
+        const ext = file.mimetype.split("/")[1]
+        cb(null,`trabajo-${req.user.id}-${file.originalname}`)
+    }
+})
+
+const filter=(req,file,cb)=>{
+    if(file.mimetype.startsWith("image")) cb(null, true)
+    cb(new AppError("no es una imagen",400), false)
+ }
+
+const upload=multer({
+    storage,
+    filter
+
+})
+
+
+
+
+
+exports.uploadPhotosTrabajo=upload.fields([
+    {name:"portada", maxCount:1}, //se tiene que llamar asi
+    {name:"image", maxCount:3}//se tiene que llamar asi
+])
+//solo 4 fotos por trabajo
+
 exports.create=async(req,res,next)=>{
     //req.user
     try {
@@ -80,7 +112,29 @@ exports.getOne=async(req,res,next)=>{
 }
 exports.update=async(req,res,next)=>{
     try {
+   
+        
+        
+        if(req.files){
+            console.log(" vino con mas de un file");
+            //console.log("cantidad ",req.files.length);
+            console.log("es un array",req.files);
+            console.log(" * ");
+            console.log("portada es",req.files.portada )
+            console.log("images es",req.files.image )
+            if(req.files.portada){
+                req.body.imagenPortada=req.files.portada[0].filename
+                console.log("---->",req.body.imagenPortada);
+            }
+            if(req.files.image){
+                const arrayimagenes=req.files.image.map((el)=>{return el.filename})
+                req.body.imagenes=arrayimagenes
+                console.log("---->",req.body.imagenes);
+            }
+        }
+        //que pasa si el body viene vacio??nada
         const job = await model.findByIdAndUpdate(req.params.id, req.body, {new:true})
+        
         res.status(200).json({
             status:"modificado",
             data:{
@@ -155,20 +209,27 @@ exports.aceptar=async(req,res,next)=>{
 
 exports.allowFixerModify=async(req,res,next)=>{
     //sos admin o sos dueño del trabajo?
-    //solo el fixer modifica el TRABAJO
+    //solo el fixer dueño del trbajo modifica el TRABAJO
     const user=req.user;
     const job=await model.findById(req.params.id)
     if(!job){
         next(new AppError("no existe el recurso", 404))
     }
-    console.log(" user", user);
+    console.log("encontre al user");
+    //console.log(" user", user);
     if(!user.isFixer ){ 
         next(new AppError("not a fixer", 404))
     }
-    if(!job.fixer==user._id){
-        next(new AppError("not allowed", 404))
+    console.log("   * * * * * * * ");
+    console.log("   * * * * * * * ");
+    console.log("esto que da?",job.fixer==user._id);
+    console.log("esto que da?",job.fixer!==user._id);
+    console.log("   * * * * * * * ");
+    console.log("   * * * * * * * ");
+    if(job.fixer!==user._id){
+        next(new AppError("not allowed to modify this resource", 404))
     }
-    console.log(" le pertenece!!!");
+    console.log(" este trabajo le pertenece!!!");
     req.job=job;
     next()
 }

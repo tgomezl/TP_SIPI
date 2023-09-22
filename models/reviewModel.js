@@ -32,7 +32,7 @@ const reviewSchema= mongoose.Schema({
         ref: 'Trabajo',
         required:[true,"necesita un trabajo"] 
     },
-    imagenes:[{type: mongoose.Schema.Types.ObjectId, ref: 'Image'}],
+    imagenes:[String],
     createdAt:{
         type:Date,
         default:Date.now(),

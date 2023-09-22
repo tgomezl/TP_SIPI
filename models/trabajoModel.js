@@ -37,7 +37,7 @@ const trabajoSchema= new mongoose.Schema({
         type:String,
         default:"proximamente.jpg"
     },
-    imagenes:[{type: mongoose.Schema.Types.ObjectId, ref: 'Image'}],
+    imagenes:[String],
     aceptadoPorFixer:{
         type:Boolean,
         default:false,

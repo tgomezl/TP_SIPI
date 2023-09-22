@@ -30,6 +30,8 @@ router
   .patch(
     authController.identificar,
     trabajoController.allowFixerModify,  //solo el fixer modifica el TRABAJO
+    trabajoController.uploadPhotosTrabajo,
+    //trabajoController.uploadPhotosTrabajo,
     trabajoController.update)
   .delete(trabajoController.delete);
 module.exports = router;

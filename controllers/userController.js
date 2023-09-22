@@ -2,9 +2,33 @@ const userModel = require("../models/userModel")
 const AppError =require("../utils/AppError")
 const utiles=require("../utils/utiles")
 
+const multer=require("multer")
+const storage=multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null, "public/img/users")
+    },
+    filename:(req,file,cb)=>{
+        const ext = file.mimetype.split("/")[1]
+        cb(null,`user-${req.user.id}-${file.originalname}`)
+    }
+})
+
+const filter=(req,file,cb)=>{
+    if(file.mimetype.startsWith("image")) cb(null, true)
+    cb(new AppError("no es una imagen",400), false)
+ }
+
+const upload=multer({
+    storage,
+    filter
+
+})
+
+exports.uploadUserPhoto =upload.single("photo");
+
 exports.createUser=async(req,res,next)=>{
     try {
-        console.log("body ",req.body);
+        //console.log("body ",req.body);
         const newuser=await userModel.create(req.body)
         res.status(200).json({
             status:"success",
@@ -139,6 +163,7 @@ exports.updateMe=async(req,res,next)=>{
     //agregar o quitar barrio va en otro endpoint
     try {
         console.log("updateMe")
+        //console.log("el body es", req.body);
         console.log("req.user", req.user);
         //modificar los campos que no se pueden 
         const newbody=utiles.filterObj(req.body, ["nombre","apellido","telefono"])
@@ -148,6 +173,12 @@ exports.updateMe=async(req,res,next)=>{
         for (let clave in newbody){
             console.log(newbody[clave]);
             user[clave]=newbody[clave]
+        }
+        console.log("       ********         *********      ********");
+        if(req.file) {
+            console.log(" viene con file");
+            console.log(req.file);
+            user.imagenPerfil=req.file.filename
         }
         const usermodified=await user.save()
         res.status(200).json({

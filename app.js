@@ -7,11 +7,30 @@ const reviewRouter= require("./routes/reviewRouter")
 const fixerRouter= require("./routes/fixerRouter")
 const adminRouter= require("./routes/adminRouter")
 const trabajoRouter=require("./routes/trabajoRouter")
+const imageRouter=require("./routes/imageRouter")
+
 const authController= require("./controllers/authController")
 
-const AppError =require("./utils/AppError")
-app.use(express.json());
 
+const AppError =require("./utils/AppError")
+
+app.use(express.json());
+app.use("/fotos",express.static('public/img'));
+
+
+app.get("/sendfiles", (req, res, next) => {
+   //console.log(req.params);
+   console.log("imagename", req.params.imagename);
+   console.log("dirname---->", __dirname);
+   //DIRNAME ES ESTO
+          // D:\UADE\3ER AÑO\2do CUATRI\CURSOS 2023\TP DE SIPI\TP GRUPAL SIPI\TP SIPI NODE\TP_SIPI
+          //no me sirve porque es una ruta absoluta
+   const rutaabsoluta=__dirname+"/public/img"+"/dos.jpg"
+   const rutarel="./public/img"+"/dos.jpg"
+   //ruta rel no funciona "path must be absolute or specify root to res.sendFile",
+   console.log("ruta", rutaabsoluta);
+    res.sendFile(rutaabsoluta)
+})
 app.use((req, res, next) => {
   console.log('running midelware 👋');
   next();
@@ -32,6 +51,7 @@ app.use('/api/v1/trabajos', trabajoRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/admins', adminRouter);
 app.use('/api/v1/fixers', fixerRouter);
+app.use('/api/v1/images', imageRouter);
 //imagen
 //trabajo
 

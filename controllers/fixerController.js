@@ -4,6 +4,29 @@ const barriomodel=require("../models/barrioModel")
 const tiposerviciomodel=require("../models/tipoServicioModel")
 const AppError = require("../utils/AppError")
 
+const multer=require("multer")
+const storage=multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null, "public/img/fixers")
+    },
+    filename:(req,file,cb)=>{
+        const ext = file.mimetype.split("/")[1]
+        cb(null,`fixer-${req.user.id}-${file.originalname}`)
+    }
+})
+
+const filter=(req,file,cb)=>{
+    if(file.mimetype.startsWith("image")) cb(null, true)
+    cb(new AppError("no es una imagen",400), false)
+ }
+
+const upload=multer({
+    storage,
+    filter
+
+})
+
+exports.uploadFixerPhoto =upload.single("photo");
 
 exports.create=async(req,res,next)=>{
     try {
@@ -167,6 +190,9 @@ exports.updateMe=async(req,res,next)=>{
         for (let clave in newbody){
             console.log(newbody[clave]);
             user[clave]=newbody[clave]
+        }
+        if(req.file){
+            user.imagenPerfil=req.file.filename
         }
         const usermodified=await user.save()
         res.status(200).json({
