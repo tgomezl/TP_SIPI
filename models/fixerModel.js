@@ -63,7 +63,7 @@ const fixerSchema= new mongoose.Schema({
     tipoServicio:[{ type: mongoose.Schema.Types.ObjectId, ref: 'TipoServicio' }],
     rating:{ 
         type:Number,
-        default:6.0,
+        default:1.0,
     },
     cantidadReviews:{
         type:Number,

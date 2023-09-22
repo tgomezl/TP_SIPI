@@ -90,7 +90,7 @@ exports.identificar = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.SECRET);
     
       // 3) Check if user still exists
-      let currentUser = await userModel.findById(decoded.id);
+      let currentUser = await userModel.findById(decoded.id).select("+mail");
       
       if (!currentUser) {
         currentUser = await fixerModel.findById(decoded.id);

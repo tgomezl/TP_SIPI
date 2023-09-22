@@ -4,7 +4,10 @@ const authController = require("../controllers/authController")
 const router = express.Router({mergeParams:true});
 const reviewRouter=require("../routes/reviewRouter")
 
-
+router
+  .route('/enviaremaildeprueba')
+  .get(
+    trabajoController.enviaremaildeprueba)
 
 //quien tendria acceso a todos los trabajos??
 router

@@ -1,6 +1,7 @@
 const model =require("../models/trabajoModel");
 const AppError = require("../utils/AppError");
 const fixermodel=require("../models/fixerModel")
+const sendMail =require("../utils/mail")
 
 const multer=require("multer")
 const storage=multer.diskStorage({
@@ -39,7 +40,10 @@ exports.create=async(req,res,next)=>{
     try {
         console.log("body ",req.body);
         //chequeo que el fixer exista
-        const fixer= await fixermodel.findById(req.body.fixer) 
+        const fixer= await fixermodel.findById(req.body.fixer)
+        .select('+mail') 
+        .select("+telefono")
+  
         if(!fixer){
             return next(new AppError("no existe el fixer ", 401))
         }
@@ -50,9 +54,37 @@ exports.create=async(req,res,next)=>{
             "descripcion":req.body.descripcion
         }
         const newjob=await model.create(data)
-        //sendemailtouser
+        //const nombreuser=req.user.nombre
+        //const apellidouser=req.user.apellido
+        
+        const mensajeparaeluser=`has iniciado un nuevo trabajo con el FIXER
+        nombre fixer: ${fixer.nombre } ,apellido: ${fixer.apellido} 
+        telefono :${ fixer.telefono},  mail:${ fixer.mail }.
+        ponte en contacto con el!!
 
-        //sendemailtofixer
+
+        *************************
+        TRABAJO INICIADO
+        *************************
+        titulo= ${ newjob.titulo}
+        job ID=${ newjob._id} 
+        *************************
+        `; 
+
+        console.log("mail del user es", req.user.mail);
+
+        //send email to user:
+        const options={
+            "email": req.user.mail,
+            "subject":"HAS INICIADO UN NUEVO TRABAJO",
+            "message":mensajeparaeluser,
+        }
+        
+        console.log("por enviar mail");
+        //console.log("options",options);
+        await sendemailtoUser(options)
+        console.log("email enviado");
+       
 
         res.status(200).json({
             status:"success",
@@ -247,4 +279,29 @@ exports.allowUserCreate=async(req,res,next)=>{
     } catch (error) {
         next(error)
     }
+}
+
+const sendemailtoUser=async (opciones)=>{
+
+    await sendMail(opciones)
+    //from user to fixer:
+    //por ahora el user no recibe mail
+}
+
+
+exports.enviaremaildeprueba=async(req,res,next)=>{
+    try {
+        console.log(" enviadno mail de prueba");
+        const options={
+            "email": "algunacuenta@email",
+            "subject":"NUEVO TRABAJO INICIADO EN LA APP",
+            "message":"soy el cuerpo del mensaje",
+        }
+        await sendMail(options)
+        res.send("enviado")
+    } catch (error) {
+        console.log(" no se pudo enviar");
+        next(error)
+    }
+    
 }
