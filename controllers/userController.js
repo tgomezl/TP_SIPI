@@ -29,6 +29,7 @@ exports.uploadUserPhoto =upload.single("photo");
 exports.createUser=async(req,res,next)=>{
     try {
         //console.log("body ",req.body);
+        console.log(" -------------------createUser");
         const newuser=await userModel.create(req.body)
         res.status(200).json({
             status:"success",
@@ -44,7 +45,7 @@ exports.createUser=async(req,res,next)=>{
 
 exports.setMe=async(req,res,next)=>{
     try {
-
+        
         req.me=req.user.id
         next()
     } catch (error) {
@@ -56,6 +57,7 @@ exports.setMe=async(req,res,next)=>{
 exports.getAllUsers=async(req,res,next)=>{
 
     try {
+        console.log(" -------------------getAllUsers");
         const users=await userModel.find();
         res.status(200).json({
             status:"success",
@@ -75,21 +77,23 @@ exports.getAllUsers=async(req,res,next)=>{
 exports.getUser=async(req,res,next)=>{
 
     try {
+        
         let id=req.params.id
         if(req.me){
             id=req.me
         }
-        console.log(" GET USER");
+        console.log(" -------------------GET USER");
         console.log( "el id", id );
         const user=await userModel.findById(id).populate("reviews").populate("trabajos");
-        if(user){
-            res.status(200).json({
-                status:"success",
-                data:{
-                    data:user
-                }
-            })
-        }
+        //console.log("user", user);
+        
+        res.status(200).json({
+            status:"success",
+            data:{
+                data:user
+            }
+        })
+    
         
     } catch (error) {
         res.status(400).json({
@@ -105,6 +109,7 @@ exports.getUser=async(req,res,next)=>{
 exports.updateUser=async(req,res,next)=>{
     //este metodo lo usa el admin
     try {
+        console.log(" -------------------updateUser");
         const user=await userModel.findByIdAndUpdate(req.params.id, req.body,
             {
                 new: true,
@@ -145,6 +150,7 @@ exports.setRol=async(req,res,next)=>{
 
 exports.modifyBody=async(req,res,next)=>{
     //filter
+    console.log("------------------modifybody");
     req.body={
         nombre: req.body.nombre,
         apellido: req.body.apellido,
@@ -162,7 +168,7 @@ exports.updateMe=async(req,res,next)=>{
     //agregar o quitarimagen, agregar o quitar servicio
     //agregar o quitar barrio va en otro endpoint
     try {
-        console.log("updateMe")
+        console.log("------------------------updateMe")
         //console.log("el body es", req.body);
         console.log("req.user", req.user);
         //modificar los campos que no se pueden 

@@ -8,9 +8,10 @@ const fixerRouter= require("./routes/fixerRouter")
 const adminRouter= require("./routes/adminRouter")
 const trabajoRouter=require("./routes/trabajoRouter")
 const imageRouter=require("./routes/imageRouter")
-
+const cookieParser = require("cookie-parser");
 const authController= require("./controllers/authController")
 
+app.use(cookieParser());
 
 const AppError =require("./utils/AppError")
 
@@ -32,6 +33,18 @@ app.get("/sendfiles", (req, res, next) => {
     res.sendFile(rutaabsoluta)
 })
 app.use((req, res, next) => {
+  console.log(JSON.stringify(req.headers));
+  //cookies???
+  if(req.cookies){
+    console.log("vino con cookies");
+    console.log(req.cookies);
+    
+    console.log(          "        token",req.cookies.token);
+    console.log("values",Object.values(req.cookies));
+  }else{
+    console.log("no vino con cookies");
+  }
+  
   console.log('running midelware 👋');
   next();
 });

@@ -30,6 +30,7 @@ exports.uploadFixerPhoto =upload.single("photo");
 
 exports.create=async(req,res,next)=>{
     try {
+        console.log("------------------create fixer");
         const fixer = await model.create(req.body)
         res.status(200).json({
             status:"success",
@@ -47,7 +48,7 @@ exports.create=async(req,res,next)=>{
 exports.getAll=async(req,res,next)=>{
     try {
         
-
+        console.log("------------------get all fixer");
         const fixers=await model.find().populate("barrios").populate("tipoServicio").sort("rating")
         res.status(200).json({
             status:"success",
@@ -66,6 +67,7 @@ exports.getAll=async(req,res,next)=>{
 
 exports.getOne=async(req,res,next)=>{
     try {
+        console.log("------------------get one fixer");
         let id=req.params.id
         if(req.me){
             id=req.me
@@ -88,7 +90,7 @@ exports.getOne=async(req,res,next)=>{
 
 exports.FixersPorZona=async(req,res,next)=>{
     try {
-   
+        console.log("------------------FixersPorZona");
         const zona=req.body.zona
         
         console.log("zona",zona);
@@ -129,6 +131,8 @@ exports.FixersPorJob=async(req,res,next)=>{
 */
 exports.FixersPorJobZona=async(req,res,next)=>{
     try {
+
+        console.log("------------------FixersPorJobZona");
         console.log(req.body);
         if(!req.body.zona && !req.body.especialidad) return next(new AppError("sin zona ni especialidad",401))
         const zona=req.body.zona.toLowerCase() 
@@ -180,7 +184,7 @@ exports.updateMe=async(req,res,next)=>{
     //agregar o quitarimagen, agregar o quitar servicio
     //agregar o quitar barrio va en otro endpoint
     try {
-        console.log("updateMe")
+        console.log("--------------------updateMe")
         console.log("req.user", req.user);
         //modificar los campos que no se pueden 
         const newbody=utiles.filterObj(req.body, ["nombre","apellido","telefono","descripcion"])

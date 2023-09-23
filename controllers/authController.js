@@ -8,6 +8,7 @@ const bcrypt = require('bcryptjs');
 
 
 const signToken = id => {
+
     return jwt.sign({ id }, process.env.SECRET, {
       expiresIn: "90m"
     });
@@ -16,7 +17,12 @@ const signToken = id => {
 
 const createSendToken = (user, statusCode=201, res) => {
     const token = signToken(user._id);
-    user.password=null
+    //user.password=null
+    console.log("-----------createSendToken!!!");
+    //cookie
+    //,{ httpOnly:true}
+    res.cookie("token", token )
+
     res.status(statusCode).json({
         status: 'success',
         token,
@@ -29,6 +35,11 @@ const createSendToken = (user, statusCode=201, res) => {
 
 exports.login = async (req, res, next) => {
   //usa ambos model para aher el loguin
+
+  try{
+
+ 
+    console.log("-----------loguin!!!");
     console.log(req.body.mail);
 
     //const logueadod= userModel.findOne({ mail:"useruser@email.com"})
@@ -66,12 +77,18 @@ exports.login = async (req, res, next) => {
   */
     // 3) If everything ok, send token to client
     createSendToken(logueado, 200, res);
+
+    }catch (error){
+      console.log("catch");
+      next(error)   
+    
+    }
   };
 
 exports.identificar = async (req, res, next) => {
   try {
     
-    
+    console.log("         ---------indetificar!!");
     // 1) Getting token and check of it's there
       let token;
       if (req.headers.authorization &&
@@ -110,6 +127,7 @@ exports.identificar = async (req, res, next) => {
       req.user = currentUser;
       console.log("user aca", req.user);
       console.log(" ");
+      
       next();
   } catch (error) {
     next(new AppError("error el identificar token", 401))
@@ -136,6 +154,7 @@ exports.onlyRoles=(roles)=>{
 
 exports.createAdmin=async(req,res,next)=>{
   try {
+    console.log("         ---------createAdmin!!");
     const admin=await userModel.create(req.body)
     createSendToken(admin, 201, res);
   } catch (error) {
@@ -161,6 +180,7 @@ exports.setMe=async(req,res,next)=>{
 
 exports.createUser=async(req,res,next)=>{
     try {
+        console.log("         ---------createUser!!");
         console.log("body ",req.body);
         const newuser=await userModel.create(req.body)
         createSendToken(newuser, 201, res);
@@ -173,6 +193,7 @@ exports.createUser=async(req,res,next)=>{
 
 exports.createFixer=async(req,res,next)=>{
     try {
+        console.log("         ---------createFixer!!");
         const fixer = await fixerModel.create(req.body)
         createSendToken(fixer, 201, res);
     } catch (error) {
@@ -184,6 +205,7 @@ exports.createFixer=async(req,res,next)=>{
 
 //**************
 exports.logout = (req, res,next) => {
+  console.log("         ---------logout!!");
   const faketoken="asdasdasd"
   res.status(200).json({
     status: 'loged out',

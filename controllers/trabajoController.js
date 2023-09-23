@@ -38,6 +38,7 @@ exports.uploadPhotosTrabajo=upload.fields([
 exports.create=async(req,res,next)=>{
     //req.user
     try {
+        console.log("------------------createjob");
         console.log("body ",req.body);
         //chequeo que el fixer exista
         const fixer= await fixermodel.findById(req.body.fixer)
@@ -101,6 +102,7 @@ exports.create=async(req,res,next)=>{
 
 exports.getAll=async(req,res,next)=>{
     try {
+        console.log("------------------get all jobs");
         console.log("body ",req.body);
         let jobs= model.find();
         if(req.params.id){
@@ -126,6 +128,7 @@ exports.getAll=async(req,res,next)=>{
 }
 exports.getOne=async(req,res,next)=>{
     try {
+        console.log("------------------get one job");
         const job = await model.findById(req.params.id).populate("user").populate("fixer").populate("review")
         
         res.status(200).json({
@@ -146,7 +149,7 @@ exports.update=async(req,res,next)=>{
     try {
    
         
-        
+        console.log("------------------update job");
         if(req.files){
             console.log(" vino con mas de un file");
             //console.log("cantidad ",req.files.length);
@@ -189,6 +192,7 @@ exports.delete=async(req,res,next)=>{
 exports.aceptar=async(req,res,next)=>{
   
     try {
+        console.log("------------------aceptar job");
         const aceptar=req.body.aceptar
         if(!aceptar){
             return next( new AppError("debe indicar si lo acepta o no",401))
@@ -242,6 +246,7 @@ exports.aceptar=async(req,res,next)=>{
 exports.allowFixerModify=async(req,res,next)=>{
     //sos admin o sos dueño del trabajo?
     //solo el fixer dueño del trbajo modifica el TRABAJO
+    console.log("------------------allowFixerModify");
     const user=req.user;
     const job=await model.findById(req.params.id)
     if(!job){
@@ -291,7 +296,7 @@ const sendemailtoUser=async (opciones)=>{
 
 exports.enviaremaildeprueba=async(req,res,next)=>{
     try {
-        console.log(" enviadno mail de prueba");
+        console.log(" ------------------enviadno mail de prueba");
         const options={
             "email": "algunacuenta@email",
             "subject":"NUEVO TRABAJO INICIADO EN LA APP",

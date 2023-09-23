@@ -6,7 +6,7 @@ const trbajoModel=require("../models/trabajoModel")
 exports.create=async(req,res,next)=>{
     //creamos la review
     try {
-       
+        console.log("------------------create review");
         const data={
             "descripcion":req.body.descripcion,
             "calificacion":req.body.calificacion,
@@ -32,6 +32,8 @@ exports.create=async(req,res,next)=>{
 
 exports.getAll=async(req,res,next)=>{
     try {
+
+        console.log("------------------get all review");
         console.log("body ",req.body);
         let reviews = model.find()
         if(req.params.id){
@@ -62,6 +64,7 @@ exports.getOne=async(req,res,next)=>{
     //NESTED
     
     try {
+        console.log("------------------get one review");
         const review = await model.findById(req.params.id).populate("usuario").populate("fixer").populate("trabajo")
         
         
@@ -83,6 +86,7 @@ exports.getOne=async(req,res,next)=>{
 exports.update=async(req,res,next)=>{
     //modificar descripcion,calificaion,imagenes
     try {
+        console.log("------------------update review");
         const review=req.review;
         console.log("review  antes", review);
         review.descripcion=req.body.descripcion
@@ -96,6 +100,7 @@ exports.update=async(req,res,next)=>{
 exports.allowUserModify=async(req,res,next)=>{
     //req.user
     try {
+        console.log("------------------allow user Modify");
         const user=req.user;
         if(user.isFixer){
             return next(new AppError("un fixer no puede modificar una review",401))
@@ -120,6 +125,7 @@ exports.allowUserCreate=async(req,res,next)=>{
     //se fija si el id del job lo tiene a el como user
     //req.user
     try {
+        console.log("------------------allow user create");
         const trabajo= await trbajoModel.findById(req.body.trabajo)
         
         if(!trabajo) return next(new AppError("no such work created",401))

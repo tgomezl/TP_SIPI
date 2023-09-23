@@ -7,7 +7,7 @@ exports.getAllReviewsFromUser=async(req,res,next)=>{
     //console.log("id recibido",req.params.id);
     //res.send("OK")
     try {
-        console.log("getAllReviewsFromUser");
+        console.log("------------------getAllReviewsFromUser");
         //console.log("id recibido",req.params.id);
         //res.send("OK")
         const reviews =await reviewModel.find().where("usuario").equals(req.params.id)
@@ -26,7 +26,7 @@ exports.getAllReviewsFromUser=async(req,res,next)=>{
 
 exports.getAllJobsFromUser=async(req,res,next)=>{
     try {
-        console.log("getAllJobsFromUser");
+        console.log("-------------------------getAllJobsFromUser");
         //console.log("id recibido",req.params.id);
         //res.send("OK")
         const jobs =await jobModel.find().where("user").equals(req.params.id)
