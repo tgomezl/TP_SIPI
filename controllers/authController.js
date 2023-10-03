@@ -109,7 +109,7 @@ exports.identificar = async (req, res, next) => {
     
       if (!token) {
         return next(
-          new AppError('You are not logged in! Please log in to get access.', 401)
+          new AppError('no pudo ser identificado, You are not logged in! Please log in to get access.', 401)
         );
       }
     

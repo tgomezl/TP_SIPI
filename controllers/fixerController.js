@@ -82,6 +82,8 @@ exports.getOne=async(req,res,next)=>{
             }
         })
     } catch (error) {
+        console.log(error.message);
+        console.log("dentro de catch");
         next(error)
     }
 
