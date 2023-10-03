@@ -239,7 +239,8 @@ exports.aceptar=async(req,res,next)=>{
 
         
     } catch (error) {
-        
+        console.log("error in catch");
+        next(error)
     }
 }
 

@@ -10,7 +10,7 @@ const bcrypt = require('bcryptjs');
 const signToken = id => {
 
     return jwt.sign({ id }, process.env.SECRET, {
-      expiresIn: "90m"
+      expiresIn: "900m"
     });
 };
   
@@ -21,7 +21,7 @@ const createSendToken = (user, statusCode=201, res) => {
     console.log("-----------createSendToken!!!");
     //cookie
     //,{ httpOnly:true}
-    res.cookie("token", token )
+    res.cookie("token", token,{ httpOnly:true})
 
     res.status(statusCode).json({
         status: 'success',
@@ -37,10 +37,12 @@ exports.login = async (req, res, next) => {
   //usa ambos model para aher el loguin
 
   try{
-
- 
+    if(!req.body){ return next(new AppError("body vacio",404))}
+    console.log("  * * * * * * * * * * * * * * * * * * * * * ** * ");
+    console.log("             * * * * * * * * * * * * * * * * ** * ");
+    console.log("                          * * * * * * * * * ** * ");
     console.log("-----------loguin!!!");
-    console.log(req.body.mail);
+    console.log("req.body en endpoint", req.body);
 
     //const logueadod= userModel.findOne({ mail:"useruser@email.com"})
     //console.log
@@ -65,6 +67,7 @@ exports.login = async (req, res, next) => {
     }
     
     const logueado= await model.findOne({ mail:mail }).select('+password')
+    if(!logueado) return next(new AppError("no such user", 500))
     //console.log("comparo", password, logueado.password);
     const soniguales= await logueado.checkPassword(password, logueado.password)
     if(!soniguales){
@@ -94,6 +97,14 @@ exports.identificar = async (req, res, next) => {
       if (req.headers.authorization &&
         req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1];
+        console.log("--------->token here",token);
+      }
+      else if(!token){
+        if(req.cookies){
+          token=req.cookies.token
+          console.log("--------->cookies here",token);
+          
+        }
       }
     
       if (!token) {
@@ -130,6 +141,7 @@ exports.identificar = async (req, res, next) => {
       
       next();
   } catch (error) {
+    console.log(" catch-->",error.message);
     next(new AppError("error el identificar token", 401))
   } 
 };
@@ -207,6 +219,8 @@ exports.createFixer=async(req,res,next)=>{
 exports.logout = (req, res,next) => {
   console.log("         ---------logout!!");
   const faketoken="asdasdasd"
+  //createSendToken(logueado, 200, res);
+  res.cookie("token", faketoken,{ httpOnly:true})
   res.status(200).json({
     status: 'loged out',
     token:faketoken,

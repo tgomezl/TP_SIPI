@@ -40,6 +40,7 @@ const reviewSchema= mongoose.Schema({
 })
 
 //chequear que el trabajo exista y modificar el rating del fixer
+//marcar el trabajao como revisionado
 reviewSchema.pre("save", async function(next) {
     
     const trabajo = await trabajomodel.findById(this.trabajo)
@@ -47,6 +48,9 @@ reviewSchema.pre("save", async function(next) {
         return next(new AppError("no such work in pre",401))
         
     }
+    console.log("marcando trabajo como review hecha");
+    trabajo.reviewHecha=true
+    await trabajo.save()
     console.log("modificando el rating del fixer");
     const fixer = await fixermodel.findById(this.fixer)
     console.log("fixer", fixer);

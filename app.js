@@ -1,17 +1,37 @@
 const express=require("express")
 const app = express();
+
+const cookieParser = require("cookie-parser");
+
+app.use(cookieParser());
 const cors=require("cors")
-app.use(cors())
+
+app.use(cors({
+  origin:["http://localhost:3006"],
+  credentials:true
+  }
+))
+
+app.use((req,res,next)=>{
+  console.log(" ");
+  console.log(" ");
+  console.log("             ***********************");
+  console.log("la url es", req.url)
+  console.log("el body recibido es", req.body)
+  console.log("            **************************");
+  console.log(" ");
+  next()
+})
+
 const userRouter =require("./routes/userRouter")
 const reviewRouter= require("./routes/reviewRouter")
 const fixerRouter= require("./routes/fixerRouter")
 const adminRouter= require("./routes/adminRouter")
 const trabajoRouter=require("./routes/trabajoRouter")
 const imageRouter=require("./routes/imageRouter")
-const cookieParser = require("cookie-parser");
+
 const authController= require("./controllers/authController")
 
-app.use(cookieParser());
 
 const AppError =require("./utils/AppError")
 

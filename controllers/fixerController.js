@@ -49,7 +49,7 @@ exports.getAll=async(req,res,next)=>{
     try {
         
         console.log("------------------get all fixer");
-        const fixers=await model.find().populate("barrios").populate("tipoServicio").sort("rating")
+        const fixers=await model.find().populate("barrios").populate("tipoServicio").sort({"rating":-1}).limit(20)
         res.status(200).json({
             status:"success",
             cantidad: fixers.length,
