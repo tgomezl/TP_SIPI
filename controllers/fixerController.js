@@ -74,7 +74,8 @@ exports.getOne=async(req,res,next)=>{
         }
         const fixer = await model.findById(id).populate("reviews")
         .populate("barrios")
-        .populate("tipoServicio");
+        .populate("tipoServicio")
+        .populate("trabajos")
         res.status(200).json({
             status:"success",
             data:{

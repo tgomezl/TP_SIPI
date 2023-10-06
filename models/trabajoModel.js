@@ -48,6 +48,10 @@ const trabajoSchema= new mongoose.Schema({
     },
     notasDelFixer:{
         type:String
+    },
+    finalizado:{
+        type:Boolean, 
+        default:false
     }
 }
 ,{

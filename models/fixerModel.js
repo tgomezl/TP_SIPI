@@ -91,6 +91,13 @@ fixerSchema.virtual("reviews",{
     
 })
 
+fixerSchema.virtual("trabajos",{
+    ref: "Trabajo",
+    foreignField:"fixer",
+    localField: "_id",
+    
+})
+
 fixerSchema.methods.checkPassword = async function(candidatePassword,userPassword) {
     return await bcrypt.compare(candidatePassword, userPassword);
 };

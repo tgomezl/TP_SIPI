@@ -148,7 +148,10 @@ exports.getOne=async(req,res,next)=>{
 exports.update=async(req,res,next)=>{
     try {
    
-        
+        const thisjob=await model.findById(req.params.id)
+        if(thisjob.finalizado==true){
+            return next(new AppError("no se puede modificar un trabajo ya finalizado"))
+        }
         console.log("------------------update job");
         if(req.files){
             console.log(" vino con mas de un file");
@@ -200,6 +203,9 @@ exports.aceptar=async(req,res,next)=>{
         let idjob=req.params.id
         
         const job = await model.findById(idjob)
+        if(job.finalizado==true){
+            return next(new AppError("no se puede aceptar un trabajo ya finalizado"))
+        }
         if(job.aceptadoPorFixer==true){
             res.status(200).json({
                 status:"already acepted",
@@ -243,6 +249,28 @@ exports.aceptar=async(req,res,next)=>{
         next(error)
     }
 }
+
+exports.marcarComoFinalizado=async(req,res,next)=>{
+    try {
+        const job = await model.findById(idjob)
+        if(job.estado!=="aceptado" || job.aceptadoPorFixer==false){
+            return next(new AppError("no se puede marcar como finalizado un job que no ha sido aceptado por el fixer"))
+        }
+        job.finalizado=true
+        const modificado=await job.save()
+        res.status(200).json({
+            status:"modificado",
+            data:{
+                data:modificado
+            }
+        })
+        return 
+
+    } catch (error) {
+        
+    }
+}
+
 
 exports.allowFixerModify=async(req,res,next)=>{
     //sos admin o sos dueño del trabajo?
