@@ -21,6 +21,7 @@ router
 router
   .route('/fixersporjobzona')
   .get(controller.FixersPorJobZona)   //necesita recibir zona y especialidad
+  .put(controller.FixersPorJobZona)   //necesita recibir zona y especialidad
   
 router
   .route('/bestfixers')

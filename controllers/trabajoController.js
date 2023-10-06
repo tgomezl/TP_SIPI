@@ -260,11 +260,14 @@ exports.allowFixerModify=async(req,res,next)=>{
     }
     console.log("   * * * * * * * ");
     console.log("   * * * * * * * ");
-    console.log("esto que da?",job.fixer==user._id);
-    console.log("esto que da?",job.fixer!==user._id);
+    const fixerid=String(job.fixer).trim()
+    const userid=String(user._id).trim()
+    console.log("son iguales ?",fixerid.trim()==userid.trim());
+    console.log("job.fixer ", fixerid," vs user._id",userid);
+    console.log("son distintos ?",fixerid.trim()==userid.trim());
     console.log("   * * * * * * * ");
     console.log("   * * * * * * * ");
-    if(job.fixer!==user._id){
+    if(fixerid!==userid){
         next(new AppError("not allowed to modify this resource", 404))
     }
     console.log(" este trabajo le pertenece!!!");
