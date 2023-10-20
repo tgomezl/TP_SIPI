@@ -159,7 +159,11 @@ exports.update=async(req,res,next)=>{
             console.log("es un array",req.files);
             console.log(" * ");
             console.log("portada es",req.files.portada )
-            console.log("images es",req.files.image )
+            console.log("image es",req.files.image )
+            for (let index = 0; index< req.files.length; index++) {
+                console.log(index,"--->",req.files[index]);
+                
+            }
             if(req.files.portada){
                 req.body.imagenPortada=req.files.portada[0].filename
                 console.log("---->",req.body.imagenPortada);

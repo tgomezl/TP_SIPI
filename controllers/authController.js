@@ -133,7 +133,7 @@ exports.identificar = async (req, res, next) => {
     
       // GRANT ACCESS
       console.log("       * * * * * * * *     ");
-      console.log("    GRANTED  ");
+      console.log("    GRANTED, EN IDENTIFICAR  ");
       console.log("       * * * * * * * *     ");
       req.user = currentUser;
       console.log("user aca", req.user);

@@ -7,6 +7,13 @@ const barrioSchema= new mongoose.Schema({
         unique:[true, "is not unique"],
         lowercase: true
     },
+    localidad:{
+        type:String,
+        required:[true,"nombre localidad is required"],
+        unique:[true, "is not unique"],
+        lowercase: true,
+        default:"CABA"
+    },
 
 },{
     toJSON:{virtuals:true},

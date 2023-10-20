@@ -15,7 +15,7 @@ const reviewSchema= mongoose.Schema({
         type:Number,
         required:[true, "no tiene calificacion"],
         min:1,
-        max:10
+        max:6
     },
     usuario:{ 
         type: mongoose.Schema.Types.ObjectId, 

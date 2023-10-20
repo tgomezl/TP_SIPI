@@ -14,8 +14,9 @@ exports.calcRating=(calificacion, ratingactual, cantidadReviews)=> {
 }
 
 
-
+//this.calificacion, ratingactual, cantidadReviewsactual)
 exports.modifyRating=(calificacion, ratingactual, cantidadReviewsactual)=> {
     const valor=(cantidadReviewsactual*ratingactual)+calificacion
-    return (Math.ceil(valor/(cantidadReviewsactual+1)))
+    let num=( valor / (cantidadReviewsactual+1) ).toFixed(1);
+    return num;
 }
