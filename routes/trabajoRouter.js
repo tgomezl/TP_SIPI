@@ -29,7 +29,7 @@ router
 router
   .route('/:id')
   //.get(authController.identificar,trabajoController.getOne)
-  get(trabajoController.getOne)
+  .get(trabajoController.getOne)
   .patch(
     authController.identificar,
     trabajoController.allowFixerModify,  //solo el fixer modifica el TRABAJO

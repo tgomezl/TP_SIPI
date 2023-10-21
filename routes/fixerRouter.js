@@ -62,7 +62,7 @@ router
   //los trabajos de este fixer son visibles para todos
 router
   //.use("/:id/trabajos", authController.identificar,trabajoRouter)
-  use("/:id/trabajos",trabajoRouter)
+  .use("/:id/trabajos",trabajoRouter)
   //todas las reviews de un fixer
 router
   .use("/:id/reviews",authController.identificar, reviewRouter)
