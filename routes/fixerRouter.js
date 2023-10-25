@@ -17,6 +17,7 @@ router
 router
   .route('/fixersporzona')
   .get(controller.FixersPorZona)
+  .put(controller.FixersPorZona) 
   
 router
   .route('/fixersporjobzona')
