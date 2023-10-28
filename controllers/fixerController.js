@@ -94,20 +94,43 @@ exports.getOne=async(req,res,next)=>{
 exports.FixersPorZona=async(req,res,next)=>{
     try {
         console.log("------------------FixersPorZona");
-        const zona=req.body.zona
+        const zona=req.body.zona.toLowerCase();
         
         console.log("zona",zona);
 
+        /*
         const barrios =await barriomodel.find()
         .where("nombre").equals(zona)
         .populate("fixers")
         .sort("fixers.rating")
-        
+        */
+        const algo=await model.aggregate([
+            {$match: {} },
+            {$lookup: 
+                        {
+                            from: "tiposervicios",
+                            localField: "tipoServicio",
+                            foreignField: "_id",
+                    as: "tipoServicio"
+                        }
+            },
+            {$lookup: 
+                        {
+                            from: "barrios",
+                            localField: "barrios",
+                            foreignField: "_id",
+                    as: "barrios"
+                        }
+            },
+            {$match: {"barrios.nombre":zona} },
+            {$sort:{"rating":1}}
+            ])
+    
         
         
        
         res.status(200).json({
-            data:barrios
+            data:algo
         })
     } catch (error) {
         next(error)
@@ -148,19 +171,19 @@ exports.FixersPorJobZona=async(req,res,next)=>{
                             from: "tiposervicios",
                             localField: "tipoServicio",
                             foreignField: "_id",
-                    as: "misservicios"
+                    as: "tipoServicio"
                         }
             },
-            {$match: {"misservicios.nombre":especialidad} },
+            {$match: {"tipoServicio.nombre":especialidad} },
             {$lookup: 
                         {
                             from: "barrios",
                             localField: "barrios",
                             foreignField: "_id",
-                    as: "misbarrios"
+                    as: "barrios"
                         }
             },
-            {$match: {"misbarrios.nombre":zona} },
+            {$match: {"barrios.nombre":zona} },
             {$sort:{"rating":1}}
             ])
     
