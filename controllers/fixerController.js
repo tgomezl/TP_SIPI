@@ -123,6 +123,7 @@ exports.FixersPorZona=async(req,res,next)=>{
                         }
             },
             {$match: {"barrios.nombre":zona} },
+            { $project: { "mail": 0, "passwordChangedAt": 0, "password":0,"telefono":0} }, 
             {$sort:{"rating":1}}
             ])
     
@@ -184,6 +185,7 @@ exports.FixersPorJobZona=async(req,res,next)=>{
                         }
             },
             {$match: {"barrios.nombre":zona} },
+            { $project: { "mail": 0, "passwordChangedAt": 0, "password":0,"telefono":0} }, 
             {$sort:{"rating":1}}
             ])
     
