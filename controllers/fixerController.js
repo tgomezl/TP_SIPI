@@ -94,7 +94,11 @@ exports.getOne=async(req,res,next)=>{
 exports.FixersPorZona=async(req,res,next)=>{
     try {
         console.log("------------------FixersPorZona");
-        const zona=req.body.zona.toLowerCase();
+        let zona=req.body.zona
+        if (Array.isArray(zona)) {
+            zona=zona[0];
+        }    
+        zona=zona.toLowerCase();
         
         console.log("zona",zona);
 
@@ -124,7 +128,7 @@ exports.FixersPorZona=async(req,res,next)=>{
             },
             {$match: {"barrios.nombre":zona} },
             { $project: { "mail": 0, "passwordChangedAt": 0, "password":0,"telefono":0} }, 
-            {$sort:{"rating":1}}
+            {$sort:{"rating":-1}}
             ])
     
         
@@ -162,8 +166,18 @@ exports.FixersPorJobZona=async(req,res,next)=>{
         console.log("------------------FixersPorJobZona");
         console.log(req.body);
         if(!req.body.zona && !req.body.especialidad) return next(new AppError("sin zona ni especialidad",401))
-        const zona=req.body.zona.toLowerCase() 
-        const especialidad=req.body.especialidad.toUpperCase() 
+        let zona=req.body.zona
+        if (Array.isArray(zona)) {
+            zona=zona[0];
+        }    
+        zona=zona.toLowerCase();
+
+        let especialidad=req.body.especialidad
+        if (Array.isArray(especialidad)) {
+            especialidad=especialidad[0];
+        }    
+    
+        especialidad=especialidad.toUpperCase() 
         console.log({zona, especialidad});
         const algo=await model.aggregate([
             {$match: {} },
@@ -186,7 +200,7 @@ exports.FixersPorJobZona=async(req,res,next)=>{
             },
             {$match: {"barrios.nombre":zona} },
             { $project: { "mail": 0, "passwordChangedAt": 0, "password":0,"telefono":0} }, 
-            {$sort:{"rating":1}}
+            {$sort:{"rating":-1}}
             ])
     
             res.status(200).json({

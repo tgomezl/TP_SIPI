@@ -26,6 +26,12 @@ router
     trabajoController.allowFixerModify,  //solo el fixer modifica el TRABAJO
     trabajoController.aceptar)
 
+    router
+    .route('/:id/finalizar')
+    .patch( authController.identificar,
+      trabajoController.allowFixerModify,  //solo el fixer finaliza el TRABAJO
+      trabajoController.finalizar)
+
 router
   .route('/:id')
   //.get(authController.identificar,trabajoController.getOne)

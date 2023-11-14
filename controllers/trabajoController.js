@@ -196,6 +196,46 @@ exports.delete=async(req,res,next)=>{
     })
 }
 
+exports.finalizar=async(req,res,next)=>{
+  
+    try {
+        console.log("------------------finalizar job");
+       
+        let idjob=req.params.id
+        
+        const job = await model.findById(idjob)
+        if(job.finalizado==true){
+            return next(new AppError("no se puede finalizar un trabajo ya finalizado"))
+        }
+        if(job.aceptadoPorFixer==false){
+            res.status(200).json({
+                status:"este trabajo no fue aceptado aun",
+                data:{
+                    data:job
+                }
+            })
+        }else{
+            job.finalizado=true;
+            job.estado="finalizado"
+            //job.fechaFinalizacion=Date.now() + 7*24*60*60*1000
+            const modified=await job.save()
+            res.status(200).json({
+                status:"fue finalizado",
+                data:{
+                    data:modified
+                }
+            })
+        }
+        
+
+        
+    } catch (error) {
+        console.log("error in catch");
+        next(error)
+    }
+}
+
+
 exports.aceptar=async(req,res,next)=>{
   
     try {
