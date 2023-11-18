@@ -32,7 +32,7 @@ const userSchema= new mongoose.Schema({
     },
     imagenPerfil:{
         type:String,
-        default:"defaultImage.jpg"
+        default:"defaultImage.png"
     },
     passwordChangedAt:{
         type:Date,
