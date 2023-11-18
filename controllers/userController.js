@@ -86,7 +86,15 @@ exports.getUser=async(req,res,next)=>{
         console.log( "el id", id );
         let user;
         if(req.me){
-            user=await userModel.findById(id).select("telefono").select("mail").populate("reviews").populate("trabajos");
+            user=await userModel.findById(id)
+            .select("apellido")
+            .select("nombre")
+            .select("telefono")
+            .select("mail")
+            .select("imagenPerfil")
+            .select("rol")
+            .select("habilitado")
+            .populate("reviews").populate("trabajos");
         }else{
             user=await userModel.findById(id).populate("reviews").populate("trabajos");
         }

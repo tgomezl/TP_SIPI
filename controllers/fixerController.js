@@ -75,7 +75,16 @@ exports.getOne=async(req,res,next)=>{
 
         let fixer;
         if(req.me){
-            fixer= await model.findById(id).select("telefono").select("mail")
+            fixer= await model.findById(id)
+            .select("telefono")
+            .select("mail")
+            .select("apellido")
+            .select("nombre")
+            .select("imagenPerfil")
+            .select("rol")
+            .select("rating")
+            .select("cantidadReviews")
+            .select("habilitado")
             .populate("reviews")
             .populate("barrios")
             .populate("tipoServicio")
