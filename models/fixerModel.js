@@ -25,7 +25,7 @@ const fixerSchema= new mongoose.Schema({
     password:{
         type:String,
         required:[true, "no tiene password"],
-        minlength: 8,
+        minlength: 3,
         select:false   
     },
     telefono:{
