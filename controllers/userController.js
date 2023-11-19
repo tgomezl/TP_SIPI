@@ -84,7 +84,21 @@ exports.getUser=async(req,res,next)=>{
         }
         console.log(" -------------------GET USER");
         console.log( "el id", id );
-        const user=await userModel.findById(id).populate("reviews").populate("trabajos");
+        let user;
+        if(req.me){
+            user=await userModel.findById(id)
+            .select("apellido")
+            .select("nombre")
+            .select("telefono")
+            .select("mail")
+            .select("imagenPerfil")
+            .select("rol")
+            .select("habilitado")
+            .populate("reviews").populate("trabajos");
+        }else{
+            user=await userModel.findById(id).populate("reviews").populate("trabajos");
+        }
+        
         //console.log("user", user);
         
         res.status(200).json({

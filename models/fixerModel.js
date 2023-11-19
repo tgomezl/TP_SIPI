@@ -25,7 +25,7 @@ const fixerSchema= new mongoose.Schema({
     password:{
         type:String,
         required:[true, "no tiene password"],
-        minlength: 8,
+        minlength: 3,
         select:false   
     },
     telefono:{
@@ -63,11 +63,11 @@ const fixerSchema= new mongoose.Schema({
     tipoServicio:[{ type: mongoose.Schema.Types.ObjectId, ref: 'TipoServicio' }],
     rating:{ 
         type:Number,
-        default:1.0,
+        default:0.0,
     },
     cantidadReviews:{
         type:Number,
-        default:1,
+        default:0,
     }
     //misreviewsrecibidas:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
     //trabajos:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Trabajo' }]

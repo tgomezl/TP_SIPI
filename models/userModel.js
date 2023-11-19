@@ -21,7 +21,7 @@ const userSchema= new mongoose.Schema({
     password:{
         type:String,
         required:[true, "no tiene password"],
-        minlength: 8,
+        minlength: 3,
         select:false   //no hace un get de este campo
     },
     telefono:{type:String,

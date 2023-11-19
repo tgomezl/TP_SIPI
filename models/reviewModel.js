@@ -56,9 +56,11 @@ reviewSchema.pre("save", async function(next) {
     console.log("fixer", fixer);
     const ratingactual=fixer.rating
     let cantidadReviewsactual=fixer.cantidadReviews 
+    /*
     if(!cantidadReviewsactual){
         cantidadReviewsactual= 1
     }
+    */
     //fixer=fixer.modifyRating(fixer,this.calificacion)
     
     const newrating=utils.modifyRating(this.calificacion, ratingactual, cantidadReviewsactual)

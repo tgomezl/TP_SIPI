@@ -72,10 +72,31 @@ exports.getOne=async(req,res,next)=>{
         if(req.me){
             id=req.me
         }
-        const fixer = await model.findById(id).populate("reviews")
-        .populate("barrios")
-        .populate("tipoServicio")
-        .populate("trabajos")
+
+        let fixer;
+        if(req.me){
+            fixer= await model.findById(id)
+            .select("telefono")
+            .select("mail")
+            .select("apellido")
+            .select("nombre")
+            .select("imagenPerfil")
+            .select("rol")
+            .select("rating")
+            .select("cantidadReviews")
+            .select("habilitado")
+            .populate("reviews")
+            .populate("barrios")
+            .populate("tipoServicio")
+            .populate("trabajos")
+           
+        }else{
+            fixer= await model.findById(id).populate("reviews")
+            .populate("barrios")
+            .populate("tipoServicio")
+            .populate("trabajos")
+        }
+        
         res.status(200).json({
             status:"success",
             data:{
