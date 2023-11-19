@@ -49,8 +49,7 @@ router
 
 router
   .route('/:id')
-  .get(authController.identificar,
-    userController.getUser)
+  .get(userController.getOneUser)
   .patch(authController.identificar,
     authController.onlyRoles(["admin"]) ,
     userController.modifyBody, 
