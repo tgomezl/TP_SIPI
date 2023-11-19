@@ -120,6 +120,40 @@ exports.getUser=async(req,res,next)=>{
 
 }
 
+
+exports.getOneUser=async(req,res,next)=>{
+
+    try {
+        
+        let id=req.params.id
+     
+        console.log(" -------------------GET ONE USER");
+        console.log( "el id", id );
+        let user=await userModel.findById(id).populate("reviews").populate("trabajos");
+        
+        
+        //console.log("user", user);
+        
+        res.status(200).json({
+            status:"success",
+            data:{
+                data:user
+            }
+        })
+    
+        
+    } catch (error) {
+        res.status(400).json({
+            status:"no encontrado",
+            data:{
+                data:null
+            }
+        })
+    }
+
+}
+
+
 exports.updateUser=async(req,res,next)=>{
     //este metodo lo usa el admin
     try {

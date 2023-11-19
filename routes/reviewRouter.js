@@ -6,8 +6,7 @@ const authController =require("../controllers/authController")
 
 router
   .route('/')
-  .get(authController.identificar,
-      reviewcontroller.getAll)
+  .get(reviewcontroller.getAll)
   .post( authController.identificar,
       reviewcontroller.allowUserCreate,  //solo el user crea review.OK
       reviewcontroller.create);
