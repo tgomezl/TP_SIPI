@@ -129,7 +129,17 @@ exports.getOneUser=async(req,res,next)=>{
      
         console.log(" -------------------GET ONE USER");
         console.log( "el id", id );
-        let user=await userModel.findById(id).populate("reviews").populate("trabajos");
+        let user=await userModel.findById(id)
+        .select("telefono")
+        .select("habilitado")
+        .select("imagenPerfil")
+        .select("nombre")
+        .select("apellido")
+        .select("isFixer")
+        .select("rol")
+        .select("id")
+        .select("_id")
+        .populate("reviews").populate("trabajos");
         
         
         //console.log("user", user);
