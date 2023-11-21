@@ -81,6 +81,7 @@ exports.getOne=async(req,res,next)=>{
             .select("apellido")
             .select("nombre")
             .select("imagenPerfil")
+            .select("descripcion")
             .select("rol")
             .select("rating")
             .select("cantidadReviews")
