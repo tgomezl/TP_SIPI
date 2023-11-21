@@ -10,7 +10,7 @@ const bcrypt = require('bcryptjs');
 const signToken = id => {
 
     return jwt.sign({ id }, process.env.SECRET, {
-      expiresIn: "900m"
+      expiresIn: "2d"
     });
 };
   
