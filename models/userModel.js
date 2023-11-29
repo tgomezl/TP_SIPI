@@ -25,7 +25,8 @@ const userSchema= new mongoose.Schema({
         select:false   //no hace un get de este campo
     },
     telefono:{type:String,
-        select:false },
+        select:true 
+    },
     habilitado:{
         type: Boolean, 
         default:true

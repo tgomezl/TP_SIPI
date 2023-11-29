@@ -58,18 +58,22 @@ exports.create=async(req,res,next)=>{
         //const nombreuser=req.user.nombre
         //const apellidouser=req.user.apellido
         
-        const mensajeparaeluser=`has iniciado un nuevo trabajo con el FIXER
-        nombre fixer: ${fixer.nombre } ,apellido: ${fixer.apellido} 
-        telefono :${ fixer.telefono},  mail:${ fixer.mail }.
-        ponte en contacto con el!!
+        const mensajeparaeluser=`Has iniciado un nuevo trabajo con un FIXER
+        DATOS DEL FIXER:
+        Nombre: ${fixer.nombre }, Apellido: ${fixer.apellido} 
+        Telefono :${ fixer.telefono},  Mail:${ fixer.mail }.
+        Ponte en contacto con el.
 
 
-        *************************
-        TRABAJO INICIADO
-        *************************
-        titulo= ${ newjob.titulo}
-        job ID=${ newjob._id} 
-        *************************
+        **************************************************************
+                                TRABAJO INICIADO
+        **************************************************************
+
+
+
+        Titulo del Trabajo = ${ newjob.titulo}
+        ID del Trabajo = ${ newjob._id} 
+        
         `; 
 
         console.log("mail del user es", req.user.mail);
