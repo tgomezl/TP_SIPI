@@ -30,7 +30,7 @@ const fixerSchema= new mongoose.Schema({
     },
     telefono:{
         type:String,
-        select:false,
+        select:true,
     },
     habilitado:{
         type: Boolean, 
